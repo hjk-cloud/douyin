@@ -6,3 +6,7 @@ type Comment struct {
 	Content    string `json:"content,omitempty"`
 	CreateDate string `json:"create_date,omitempty"`
 }
+
+func (Comment) TableName() string {
+	return "comment"
+}

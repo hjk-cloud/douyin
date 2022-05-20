@@ -2,6 +2,7 @@ package routers
 
 import (
 	"github.com/RaymondCode/simple-demo/controller"
+	"github.com/RaymondCode/simple-demo/test"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,6 +11,9 @@ func InitRouter(r *gin.Engine) {
 	r.Static("/static", "./public")
 
 	apiRouter := r.Group("/douyin")
+
+	//test
+	apiRouter.GET("/userList/", test.UserList)
 
 	// basic apis
 	apiRouter.GET("/feed/", controller.Feed)

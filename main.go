@@ -1,14 +1,17 @@
 package main
 
 import (
+	"github.com/RaymondCode/simple-demo/models"
 	"github.com/RaymondCode/simple-demo/routers"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	models.Init()
+
 	r := gin.Default()
 
 	routers.InitRouter(r)
 
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	r.Run()
 }
