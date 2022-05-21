@@ -2,6 +2,7 @@ package models
 
 type Video struct {
 	Id            int64  `gorm:"column:id;type:int" json:"id,omitempty"`
+	AuthorId      int64  `gorm:"column:author_id" json:"author_id,omitempty"`
 	Author        User   `json:"author"`
 	PlayUrl       string `gorm:"column:play_url;type:varchar(255)" json:"play_url" json:"play_url,omitempty"`
 	CoverUrl      string `gorm:"column:play_url;type:varchar(255)" json:"cover_url,omitempty"`

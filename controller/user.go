@@ -4,7 +4,6 @@ import (
 	"github.com/RaymondCode/simple-demo/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"sync/atomic"
 )
 
 // usersLoginInfo use map to store user info, and key is username+password for demo
@@ -38,22 +37,22 @@ func Register(c *gin.Context) {
 	password := c.Query("password")
 
 	token := username + password
-
-	if _, exist := usersLoginInfo[token]; exist {
+	_, err := models.QueryUserByName(username)
+	if err != nil {
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: models.Response{StatusCode: 1, StatusMsg: "User already exist"},
 		})
 	} else {
-		atomic.AddInt64(&userIdSequence, 1)
 		newUser := models.User{
-			Id:   userIdSequence,
-			Name: username,
+			Name:     username,
+			Password: password,
+			Token:    username + password,
 		}
-		usersLoginInfo[token] = newUser
+		models.Register(&newUser)
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: models.Response{StatusCode: 0},
 			UserId:   userIdSequence,
-			Token:    username + password,
+			Token:    token,
 		})
 	}
 }
@@ -64,7 +63,8 @@ func Login(c *gin.Context) {
 
 	token := username + password
 
-	if user, exist := usersLoginInfo[token]; exist {
+	user, err := models.Login(username, password)
+	if user != nil && err == nil {
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: models.Response{StatusCode: 0},
 			UserId:   user.Id,
@@ -72,22 +72,22 @@ func Login(c *gin.Context) {
 		})
 	} else {
 		c.JSON(http.StatusOK, UserLoginResponse{
-			Response: models.Response{StatusCode: 1, StatusMsg: "User doesn't exist"},
+			Response: models.Response{StatusCode: 1, StatusMsg: "login------User doesn't exist"},
 		})
 	}
 }
 
 func UserInfo(c *gin.Context) {
 	token := c.Query("token")
-
-	if user, exist := usersLoginInfo[token]; exist {
+	user, err := models.QueryUserByToken(token)
+	if user != nil && err == nil {
 		c.JSON(http.StatusOK, UserResponse{
 			Response: models.Response{StatusCode: 0},
-			User:     user,
+			User:     *user,
 		})
 	} else {
 		c.JSON(http.StatusOK, UserResponse{
-			Response: models.Response{StatusCode: 1, StatusMsg: "User doesn't exist"},
+			Response: models.Response{StatusCode: 1, StatusMsg: "user info-----User doesn't exist"},
 		})
 	}
 }

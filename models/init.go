@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-var DB = Init()
+var db = Init()
 
 func Init() *gorm.DB {
 	dsn := "root:110039@tcp(127.0.0.1:3306)/douyin?charset=utf8mb4&parseTime=True&loc=Local"
