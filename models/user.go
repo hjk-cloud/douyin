@@ -63,7 +63,7 @@ func QueryUserByToken(token string) (*User, error) {
 		return nil, nil
 	}
 	if err != nil {
-		utils.Logger.Error("find user by token err:" + err.Error())
+		utils.Logger.Error("find user by  token err:" + err.Error())
 		return nil, err
 	}
 	return &user, nil

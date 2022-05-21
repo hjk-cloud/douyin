@@ -72,7 +72,7 @@ func Login(c *gin.Context) {
 		})
 	} else {
 		c.JSON(http.StatusOK, UserLoginResponse{
-			Response: models.Response{StatusCode: 1, StatusMsg: "login------User doesn't exist"},
+			Response: models.Response{StatusCode: 1, StatusMsg: "login----User doesn't exist"},
 		})
 	}
 }
@@ -87,7 +87,7 @@ func UserInfo(c *gin.Context) {
 		})
 	} else {
 		c.JSON(http.StatusOK, UserResponse{
-			Response: models.Response{StatusCode: 1, StatusMsg: "user info-----User doesn't exist"},
+			Response: models.Response{StatusCode: 1, StatusMsg: "user info---User doesn't exist"},
 		})
 	}
 }
