@@ -37,7 +37,7 @@ func Register(c *gin.Context) {
 	password := c.Query("password")
 
 	token := username + password
-	_, err := models.QueryUserByName(username)
+	_, err := models.NewUserDaoInstance().QueryUserByName(username)
 	if err != nil {
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: models.Response{StatusCode: 1, StatusMsg: "User already exist"},
@@ -48,7 +48,7 @@ func Register(c *gin.Context) {
 			Password: password,
 			Token:    username + password,
 		}
-		models.Register(&newUser)
+		err = models.NewUserDaoInstance().Register(&newUser)
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: models.Response{StatusCode: 0},
 			UserId:   userIdSequence,
@@ -63,8 +63,8 @@ func Login(c *gin.Context) {
 
 	token := username + password
 
-	user, err := models.Login(username, password)
-	if user != nil && err == nil {
+	user, err := models.NewUserDaoInstance().Login(username, password)
+	if err == nil {
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: models.Response{StatusCode: 0},
 			UserId:   user.Id,
@@ -79,7 +79,7 @@ func Login(c *gin.Context) {
 
 func UserInfo(c *gin.Context) {
 	token := c.Query("token")
-	user, err := models.QueryUserByToken(token)
+	user, err := models.NewUserDaoInstance().QueryUserByToken(token)
 	if user != nil && err == nil {
 		c.JSON(http.StatusOK, UserResponse{
 			Response: models.Response{StatusCode: 0},

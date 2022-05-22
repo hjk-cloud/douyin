@@ -17,7 +17,8 @@ type VideoListResponse struct {
 func Publish(c *gin.Context) {
 	token := c.PostForm("token")
 
-	if _, exist := usersLoginInfo[token]; !exist {
+	user, err := models.NewUserDaoInstance().QueryUserByToken(token)
+	if err != nil {
 		c.JSON(http.StatusOK, models.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
 		return
 	}
@@ -32,7 +33,6 @@ func Publish(c *gin.Context) {
 	}
 
 	filename := filepath.Base(data.Filename)
-	user := usersLoginInfo[token]
 	finalName := fmt.Sprintf("%d_%s", user.Id, filename)
 	saveFile := filepath.Join("./public/", finalName)
 	if err := c.SaveUploadedFile(data, saveFile); err != nil {
@@ -51,10 +51,11 @@ func Publish(c *gin.Context) {
 
 // PublishList all users have same publish video list
 func PublishList(c *gin.Context) {
+	videos := models.NewVideoDaoInstance().MQueryVideo()
 	c.JSON(http.StatusOK, VideoListResponse{
 		Response: models.Response{
 			StatusCode: 0,
 		},
-		VideoList: DemoVideos,
+		VideoList: videos,
 	})
 }

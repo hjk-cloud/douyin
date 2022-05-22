@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/RaymondCode/simple-demo/utils"
-	"github.com/RaymondCode/simple-demo/utils/errmsg"
 	"gorm.io/gorm"
 	"sync"
 )
@@ -35,17 +34,18 @@ func NewUserDaoInstance() *UserDao {
 	return userDao
 }
 
-func Register(data *User) int64 {
-	err := db.Create(&data).Error
+func (*UserDao) Register(user *User) error {
+	err := db.Create(&user).Error
 	if err != nil {
-		return errmsg.ERROR
+		utils.Logger.Error("create user err:" + err.Error())
+		return err
 	}
-	return errmsg.SUCCESS
+	return nil
 }
 
-func QueryUserById(id int64) (*User, error) {
+func (*UserDao) QueryUserById(id int64) (*User, error) {
 	var user User
-	err := db.Where("id = ?", id).Find(&user).Error
+	err := db.Where("id = ?", id).Take(&user).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}
@@ -56,9 +56,9 @@ func QueryUserById(id int64) (*User, error) {
 	return &user, nil
 }
 
-func QueryUserByToken(token string) (*User, error) {
+func (*UserDao) QueryUserByToken(token string) (*User, error) {
 	var user User
-	err := db.Where("token = ?", token).Find(&user).Error
+	err := db.Where("token = ?", token).Take(&user).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}
@@ -69,9 +69,9 @@ func QueryUserByToken(token string) (*User, error) {
 	return &user, nil
 }
 
-func QueryUserByName(name string) (*User, error) {
+func (*UserDao) QueryUserByName(name string) (*User, error) {
 	var user User
-	err := db.Where("name = ?", name).Find(&user).Error
+	err := db.Where("name = ?", name).Take(&user).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}
@@ -82,12 +82,11 @@ func QueryUserByName(name string) (*User, error) {
 	return &user, nil
 }
 
-func Login(name string, password string) (*User, error) {
+func (*UserDao) Login(name string, password string) (*User, error) {
 	var user User
-	err := db.Where("name = ? AND password = ?", name, password).Find(&user).Error
-
+	err := db.Where("name = ? AND password = ?", name, password).Take(&user).Error
 	if err == gorm.ErrRecordNotFound {
-		return nil, nil
+		return nil, err
 	}
 	if err != nil {
 		utils.Logger.Error("login err:" + err.Error())
