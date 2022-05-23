@@ -45,7 +45,7 @@ func Publish(c *gin.Context) {
 
 	c.JSON(http.StatusOK, models.Response{
 		StatusCode: 0,
-		StatusMsg:  finalName + " uploaded successfully",
+		StatusMsg:  finalName + " uploaded successfully！！",
 	})
 }
 
