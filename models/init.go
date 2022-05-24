@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/RaymondCode/simple-demo/define"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
@@ -9,7 +10,7 @@ import (
 var db = Init()
 
 func Init() *gorm.DB {
-	dsn := "root:110039@tcp(127.0.0.1:3306)/douyin?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := define.DBUserName + ":" + define.DBPassWord + "@tcp(127.0.0.1:3306)/" + define.DBName + "?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Print("gorm Init Error: ", err)

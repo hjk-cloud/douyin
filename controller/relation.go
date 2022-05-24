@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/RaymondCode/simple-demo/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -13,6 +14,7 @@ type UserListResponse struct {
 }
 
 //接到的user_id和to_user_id都是0，怀疑前端接口没写好
+//是我的问题，明天改--------------------------------------
 func RelationAction(c *gin.Context) {
 	token := c.Query("token")
 	userIdString := c.Query("user_id")
@@ -20,6 +22,8 @@ func RelationAction(c *gin.Context) {
 	actionType := c.Query("action_type") //1-关注，2-取消关注
 	userId, _ := strconv.Atoi(userIdString)
 	toUserId, _ := strconv.Atoi(toUserIdString)
+	fmt.Println("user_id----------", userId)
+	fmt.Println("to_user_id----------", toUserId)
 	if _, err := models.NewUserDaoInstance().QueryUserByToken(token); err == nil {
 		c.JSON(http.StatusOK, models.Response{StatusCode: 0})
 	} else {
