@@ -7,13 +7,13 @@ import (
 )
 
 type Video struct {
-	Id            int64  `gorm:"column:id;type:int" json:"id,omitempty"`
-	AuthorId      int64  `gorm:"column:author_id" json:"author_id,omitempty"`
+	Id            int    `gorm:"column:id;type:int" json:"id,omitempty"`
+	AuthorId      int    `gorm:"column:author_id" json:"author_id,omitempty"`
 	Author        User   `json:"author"`
 	PlayUrl       string `gorm:"column:play_url;type:varchar(255)" json:"play_url" json:"play_url,omitempty"`
 	CoverUrl      string `gorm:"column:play_url;type:varchar(255)" json:"cover_url,omitempty"`
-	FavoriteCount int64  `gorm:"column:favorite_count;type:int" json:"favorite_count,omitempty"`
-	CommentCount  int64  `gorm:"column:comment_count;type:int" json:"comment_count,omitempty"`
+	FavoriteCount int    `gorm:"column:favorite_count;type:int" json:"favorite_count,omitempty"`
+	CommentCount  int    `gorm:"column:comment_count;type:int" json:"comment_count,omitempty"`
 	IsFavorite    bool   `gorm:"column:is_favorite;type:tinyint(1)" json:"is_favorite,omitempty"`
 	Title         string `json:"title,omitempty"`
 }
@@ -50,6 +50,26 @@ func (*VideoDao) MQueryVideo() []Video {
 	}
 	if err != nil {
 		utils.Logger.Error("find videos error:" + err.Error())
+		return nil
+	}
+	for i := range videos {
+		videos[i].Author = NewVideoDaoInstance().BuildAuthor(videos[i])
+	}
+	return videos
+}
+
+func (*VideoDao) MQueryVideoByToken(token string) []Video {
+	user, err := NewUserDaoInstance().QueryUserByToken(token)
+	if err == gorm.ErrRecordNotFound {
+		return nil
+	}
+	var videos []Video
+	err = db.Where("author_id = ?", user.Id).Find(&videos).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil
+	}
+	if err != nil {
+		utils.Logger.Error("find videos by token error:" + err.Error())
 		return nil
 	}
 	for i := range videos {

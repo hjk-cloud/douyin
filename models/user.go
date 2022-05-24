@@ -7,11 +7,11 @@ import (
 )
 
 type User struct {
-	Id            int64  `gorm:"column:id;type:int" json:"id,omitempty"`
+	Id            int    `gorm:"column:id;type:int" json:"id,omitempty"`
 	Name          string `gorm:"column:name;type:varchar(10);" json:"name,omitempty"`
 	Password      string `gorm:"column:password;type:varchar(10);" json:"password"`
-	FollowCount   int64  `gorm:"column:follow_count;type:int" json:"follow_count,omitempty"`
-	FollowerCount int64  `gorm:"column:follower_count;type:int" json:"follower_count,omitempty"`
+	FollowCount   int    `gorm:"column:follow_count;type:int" json:"follow_count,omitempty"`
+	FollowerCount int    `gorm:"column:follower_count;type:int" json:"follower_count,omitempty"`
 	IsFollow      bool   `gorm:"column:is_follow;type:tinyint(1)" json:"is_follow,omitempty"`
 	Token         string `json:"token"`
 }
@@ -43,7 +43,7 @@ func (*UserDao) Register(user *User) error {
 	return nil
 }
 
-func (*UserDao) QueryUserById(id int64) (*User, error) {
+func (*UserDao) QueryUserById(id int) (*User, error) {
 	var user User
 	err := db.Where("id = ?", id).Take(&user).Error
 	if err == gorm.ErrRecordNotFound {
@@ -54,6 +54,19 @@ func (*UserDao) QueryUserById(id int64) (*User, error) {
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (*UserDao) MQueryUserById(ids []int) []User {
+	var users []User
+	err := db.Where("id in ?", ids).Find(&users).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil
+	}
+	if err != nil {
+		utils.Logger.Error("find user by id err:" + err.Error())
+		return nil
+	}
+	return users
 }
 
 func (*UserDao) QueryUserByToken(token string) (*User, error) {

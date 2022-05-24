@@ -13,6 +13,8 @@ type VideoListResponse struct {
 	VideoList []models.Video `json:"video_list"`
 }
 
+//todo
+
 // Publish check token then save upload file to public directory
 func Publish(c *gin.Context) {
 	token := c.PostForm("token")
@@ -45,13 +47,13 @@ func Publish(c *gin.Context) {
 
 	c.JSON(http.StatusOK, models.Response{
 		StatusCode: 0,
-		StatusMsg:  finalName + " uploaded successfully！！",
+		StatusMsg:  finalName + " uploaded successfully",
 	})
 }
 
-// PublishList all users have same publish video list
 func PublishList(c *gin.Context) {
-	videos := models.NewVideoDaoInstance().MQueryVideo()
+	token := c.Query("token")
+	videos := models.NewVideoDaoInstance().MQueryVideoByToken(token)
 	c.JSON(http.StatusOK, VideoListResponse{
 		Response: models.Response{
 			StatusCode: 0,

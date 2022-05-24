@@ -1,9 +1,11 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/RaymondCode/simple-demo/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 type CommentListResponse struct {
@@ -39,10 +41,14 @@ func CommentAction(c *gin.Context) {
 	}
 }
 
-// CommentList all videos have same demo comment list
 func CommentList(c *gin.Context) {
+	//token := c.Query("token")
+	videoIdString := c.Query("video_id")
+	videoId, _ := strconv.Atoi(videoIdString)
+	fmt.Println("videoId ----------", videoId)
+	comments := models.NewCommentDaoInstance().MQueryCommentById(videoId)
 	c.JSON(http.StatusOK, CommentListResponse{
 		Response:    models.Response{StatusCode: 0},
-		CommentList: DemoComments,
+		CommentList: comments,
 	})
 }

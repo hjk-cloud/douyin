@@ -19,11 +19,11 @@ var usersLoginInfo = map[string]models.User{
 	},
 }
 
-var userIdSequence = int64(1)
+var userIdSequence = int(1)
 
 type UserLoginResponse struct {
 	models.Response
-	UserId int64  `json:"user_id,omitempty"`
+	UserId int    `json:"user_id,omitempty"`
 	Token  string `json:"token"`
 }
 
