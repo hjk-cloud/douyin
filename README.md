@@ -2,9 +2,7 @@
 
 ## 抖音项目服务端简单示例
 
-具体功能内容参考飞书说明文档
-
-工程无其他依赖，直接编译运行即可
+导入项目后，在/define/define.go中修改相应参数适配本地信息
 
 ```shell
 go build && ./simple-demo
@@ -12,11 +10,10 @@ go build && ./simple-demo
 
 ### 功能说明
 
-接口功能不完善，仅作为示例
+抖音接口文档
+https://www.apifox.cn/apidoc/shared-8cc50618-0da6-4d5e-a398-76f3b8f766c5/api-18345145
 
-* 用户登录数据保存在内存中，单次运行过程中有效
-* 视频上传后会保存到本地 public 目录中，访问时用 127.0.0.1:8080/static/video_name 即可
+### 待优化
 
-### 测试数据
+token应该放在session中，我直接写到数据库的user表里了，后期改进
 
-测试数据写在 demo_data.go 中，用于列表接口的 mock 测试

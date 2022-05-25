@@ -23,12 +23,13 @@ DROP TABLE IF EXISTS `comment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `comment` (
-  `id` int NOT NULL,
-  `user_id` int DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `video_id` int NOT NULL,
   `content` text COMMENT '评论内容',
   `create_date` varchar(10) DEFAULT NULL COMMENT '评论日期',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +38,32 @@ CREATE TABLE `comment` (
 
 LOCK TABLES `comment` WRITE;
 /*!40000 ALTER TABLE `comment` DISABLE KEYS */;
+INSERT INTO `comment` VALUES (1,5,1,'快跑啊！！！','05-23'),(2,2,1,'为什么不装死','05-24');
 /*!40000 ALTER TABLE `comment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `relation`
+--
+
+DROP TABLE IF EXISTS `relation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `relation` (
+  `user_id` int NOT NULL,
+  `to_user_id` int NOT NULL,
+  PRIMARY KEY (`user_id`,`to_user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `relation`
+--
+
+LOCK TABLES `relation` WRITE;
+/*!40000 ALTER TABLE `relation` DISABLE KEYS */;
+INSERT INTO `relation` VALUES (2,3),(3,1),(3,4),(3,5),(5,3);
+/*!40000 ALTER TABLE `relation` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -81,14 +107,12 @@ CREATE TABLE `video` (
   `author_id` int NOT NULL,
   `play_url` varchar(255) NOT NULL COMMENT '播放地址',
   `cover_url` varchar(255) NOT NULL COMMENT '封面地址',
-  `favorite_count` int DEFAULT NULL COMMENT '点赞数',
-  `comment_count` int DEFAULT NULL COMMENT '评论数',
-  `is_favorite` tinyint(1) DEFAULT NULL COMMENT '是否点赞',
+  `favorite_count` int DEFAULT '0' COMMENT '点赞数',
+  `comment_count` int DEFAULT '0' COMMENT '评论数',
+  `is_favorite` tinyint(1) DEFAULT '0' COMMENT '是否点赞',
   `title` varchar(20) NOT NULL COMMENT '标题',
-  PRIMARY KEY (`id`),
-  KEY `video_user_id_fk` (`author_id`),
-  CONSTRAINT `video_user_id_fk` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,7 +121,7 @@ CREATE TABLE `video` (
 
 LOCK TABLES `video` WRITE;
 /*!40000 ALTER TABLE `video` DISABLE KEYS */;
-INSERT INTO `video` VALUES (1,3,'https://www.w3schools.com/html/movie.mp4','https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg',3,5,0,'熊来了！！');
+INSERT INTO `video` VALUES (1,3,'https://www.w3schools.com/html/movie.mp4','https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg',3,5,0,'熊来了！！'),(2,4,'https://www.w3schools.com/html/mov_bbb.mp4','https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg',0,0,0,'熊又来了'),(3,1,'http://192.168.134.188:8080/static/3_VID_20220522_213535.mp4','https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg',1,1,0,'熊不走了..'),(4,3,'http://192.168.134.188:8080/static/3_VID_20220524_225242.mp4','https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg',0,0,0,'早点睡觉');
 /*!40000 ALTER TABLE `video` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -110,4 +134,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-05-22 22:49:14
+-- Dump completed on 2022-05-25 15:33:54
