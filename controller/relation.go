@@ -13,31 +13,35 @@ type UserListResponse struct {
 	UserList []models.User `json:"user_list"`
 }
 
-//接到的user_id和to_user_id都是0，怀疑前端接口没写好
-//是我的问题，明天改--------------------------------------
 func RelationAction(c *gin.Context) {
 	token := c.Query("token")
-	userIdString := c.Query("user_id")
+	//从前端获取到的user_id一直为0，目前解决方法是获取token，再根据token获取当前用户user_id
+	//userIdString := c.Query("user_id")
+	//userId, _ := strconv.Atoi(userIdString)
 	toUserIdString := c.Query("to_user_id")
-	actionType := c.Query("action_type") //1-关注，2-取消关注
-	userId, _ := strconv.Atoi(userIdString)
 	toUserId, _ := strconv.Atoi(toUserIdString)
-	fmt.Println("user_id----------", userId)
-	fmt.Println("to_user_id----------", toUserId)
-	if _, err := models.NewUserDaoInstance().QueryUserByToken(token); err == nil {
+	actionType := c.Query("action_type") //1-关注，2-取消关注
+	user, err := models.NewUserDaoInstance().QueryUserByToken(token)
+	if err == nil {
 		c.JSON(http.StatusOK, models.Response{StatusCode: 0})
 	} else {
 		c.JSON(http.StatusOK, models.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
 		return
 	}
-	relation, err := models.NewRelationDaoInstance().QueryRelation(userId, toUserId)
-	if err != nil {
-		c.JSON(http.StatusOK, models.Response{StatusCode: 1, StatusMsg: "Relation err!!!!!!"})
-		return
-	}
+	fmt.Println("user_id----------", user.Id)
+	fmt.Println("to_user_id----------", toUserId)
+	fmt.Println("action_type----------", actionType)
 	if actionType == "1" {
+		relation, _ := models.NewRelationDaoInstance().QueryRelation(user.Id, toUserId)
+		relation.UserId = user.Id
+		relation.ToUserId = toUserId
 		models.NewRelationDaoInstance().CreateRelation(relation)
 	} else {
+		relation, err := models.NewRelationDaoInstance().QueryRelation(user.Id, toUserId)
+		if err != nil {
+			c.JSON(http.StatusOK, models.Response{StatusCode: 1, StatusMsg: "no Relation !!!!!!"})
+			return
+		}
 		models.NewRelationDaoInstance().DeleteRelation(relation)
 	}
 }

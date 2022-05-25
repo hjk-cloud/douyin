@@ -38,7 +38,7 @@ func (*RelationDao) CreateRelation(relation Relation) error {
 }
 
 func (*RelationDao) DeleteRelation(relation Relation) error {
-	if err := db.Delete(&relation).Error; err != nil {
+	if err := db.Where("user_id = ? and to_user_id = ?", relation.UserId, relation.ToUserId).Delete(&relation).Error; err != nil {
 		utils.Logger.Error("insert relation err:" + err.Error())
 		return err
 	}

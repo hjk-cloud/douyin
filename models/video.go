@@ -44,7 +44,7 @@ func (*VideoDao) BuildAuthor(video Video) User {
 
 func (*VideoDao) MQueryVideo() []Video {
 	var videos []Video
-	err := db.Limit(30).Find(&videos).Error
+	err := db.Order("id desc").Limit(30).Find(&videos).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil
 	}
