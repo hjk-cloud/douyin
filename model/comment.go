@@ -1,8 +1,8 @@
-package models
+package model
 
 import (
 	"fmt"
-	"github.com/RaymondCode/simple-demo/utils"
+	"github.com/RaymondCode/simple-demo/util"
 	"gorm.io/gorm"
 	"sync"
 )
@@ -42,7 +42,7 @@ func (*CommentDao) MQueryCommentById(videoId int) []Comment {
 		return nil
 	}
 	if err != nil {
-		utils.Logger.Error("find comments error:" + err.Error())
+		util.Logger.Error("find comments error:" + err.Error())
 		return nil
 	}
 	return comments

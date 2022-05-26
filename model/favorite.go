@@ -1,7 +1,7 @@
-package models
+package model
 
 import (
-	"github.com/RaymondCode/simple-demo/utils"
+	"github.com/RaymondCode/simple-demo/util"
 	"gorm.io/gorm"
 	"sync"
 )
@@ -31,7 +31,7 @@ func NewFavoriteDaoInstance() *FavoriteDao {
 
 func (*FavoriteDao) CreateFavorite(favorite Favorite) error {
 	if err := db.Table("favorite").Create(&favorite).Error; err != nil {
-		utils.Logger.Error("insert favorite err:" + err.Error())
+		util.Logger.Error("insert favorite err:" + err.Error())
 		return err
 	}
 	return nil
@@ -39,7 +39,7 @@ func (*FavoriteDao) CreateFavorite(favorite Favorite) error {
 
 func (*FavoriteDao) DeleteFavorite(favorite Favorite) error {
 	if err := db.Table("favorite").Where("user_id = ? and video_id = ?", favorite.UserId, favorite.VideoId).Delete(&favorite).Error; err != nil {
-		utils.Logger.Error("delete favorite err:" + err.Error())
+		util.Logger.Error("delete favorite err:" + err.Error())
 		return err
 	}
 	return nil
@@ -52,7 +52,7 @@ func (*FavoriteDao) QueryFavoriteCount(videoId int) (int, error) {
 		return 0, err
 	}
 	if err != nil {
-		utils.Logger.Error("find relations by user_id error:" + err.Error())
+		util.Logger.Error("find relations by user_id error:" + err.Error())
 		return 0, err
 	}
 	return int(count), nil
@@ -65,7 +65,7 @@ func (*FavoriteDao) QueryFavoriteVideo(userId int) []int {
 		return nil
 	}
 	if err != nil {
-		utils.Logger.Error("find favorite by user_id error:" + err.Error())
+		util.Logger.Error("find favorite by user_id error:" + err.Error())
 		return nil
 	}
 	return videoIds

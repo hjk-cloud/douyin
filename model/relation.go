@@ -1,7 +1,7 @@
-package models
+package model
 
 import (
-	"github.com/RaymondCode/simple-demo/utils"
+	"github.com/RaymondCode/simple-demo/util"
 	"gorm.io/gorm"
 	"sync"
 )
@@ -31,7 +31,7 @@ func NewRelationDaoInstance() *RelationDao {
 
 func (*RelationDao) CreateRelation(relation Relation) error {
 	if err := db.Create(&relation).Error; err != nil {
-		utils.Logger.Error("insert relation err:" + err.Error())
+		util.Logger.Error("insert relation err:" + err.Error())
 		return err
 	}
 	return nil
@@ -39,7 +39,7 @@ func (*RelationDao) CreateRelation(relation Relation) error {
 
 func (*RelationDao) DeleteRelation(relation Relation) error {
 	if err := db.Where("user_id = ? and to_user_id = ?", relation.UserId, relation.ToUserId).Delete(&relation).Error; err != nil {
-		utils.Logger.Error("delete relation err:" + err.Error())
+		util.Logger.Error("delete relation err:" + err.Error())
 		return err
 	}
 	return nil
@@ -52,7 +52,7 @@ func (*RelationDao) QueryRelationByUserId(userId int) []int {
 		return nil
 	}
 	if err != nil {
-		utils.Logger.Error("find relations by user_id error:" + err.Error())
+		util.Logger.Error("find relations by user_id error:" + err.Error())
 		return nil
 	}
 	return ids
@@ -65,7 +65,7 @@ func (*RelationDao) QueryRelationByToUserId(userId int) []int {
 		return nil
 	}
 	if err != nil {
-		utils.Logger.Error("find relations by user_id error:" + err.Error())
+		util.Logger.Error("find relations by user_id error:" + err.Error())
 		return nil
 	}
 	return ids
@@ -78,7 +78,7 @@ func (*RelationDao) QueryRelation(userId int, toUserId int) (Relation, error) {
 		return relation, err
 	}
 	if err != nil {
-		utils.Logger.Error("find relations by user_id error:" + err.Error())
+		util.Logger.Error("find relations by user_id error:" + err.Error())
 		return relation, err
 	}
 	return relation, nil

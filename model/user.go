@@ -1,7 +1,7 @@
-package models
+package model
 
 import (
-	"github.com/RaymondCode/simple-demo/utils"
+	"github.com/RaymondCode/simple-demo/util"
 	"gorm.io/gorm"
 	"sync"
 )
@@ -37,7 +37,7 @@ func NewUserDaoInstance() *UserDao {
 func (*UserDao) Register(user *User) error {
 	err := db.Create(&user).Error
 	if err != nil {
-		utils.Logger.Error("create user err:" + err.Error())
+		util.Logger.Error("create user err:" + err.Error())
 		return err
 	}
 	return nil
@@ -50,7 +50,7 @@ func (*UserDao) QueryUserById(id int) (*User, error) {
 		return nil, nil
 	}
 	if err != nil {
-		utils.Logger.Error("find user by id err:" + err.Error())
+		util.Logger.Error("find user by id err:" + err.Error())
 		return nil, err
 	}
 	return &user, nil
@@ -63,7 +63,7 @@ func (*UserDao) MQueryUserById(ids []int) []User {
 		return nil
 	}
 	if err != nil {
-		utils.Logger.Error("find user by id err:" + err.Error())
+		util.Logger.Error("find user by id err:" + err.Error())
 		return nil
 	}
 	return users
@@ -76,7 +76,7 @@ func (*UserDao) QueryUserByToken(token string) (*User, error) {
 		return nil, nil
 	}
 	if err != nil {
-		utils.Logger.Error("find user by  token err:" + err.Error())
+		util.Logger.Error("find user by  token err:" + err.Error())
 		return nil, err
 	}
 	return &user, nil
@@ -89,7 +89,7 @@ func (*UserDao) QueryUserByName(name string) (*User, error) {
 		return nil, nil
 	}
 	if err != nil {
-		utils.Logger.Error("find user by id err:" + err.Error())
+		util.Logger.Error("find user by id err:" + err.Error())
 		return nil, err
 	}
 	return &user, nil
@@ -102,7 +102,7 @@ func (*UserDao) Login(name string, password string) (*User, error) {
 		return nil, err
 	}
 	if err != nil {
-		utils.Logger.Error("login err:" + err.Error())
+		util.Logger.Error("login err:" + err.Error())
 		return nil, err
 	}
 	return &user, nil

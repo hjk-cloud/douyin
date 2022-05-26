@@ -3,15 +3,15 @@ package controller
 import (
 	"fmt"
 	"github.com/RaymondCode/simple-demo/define"
-	"github.com/RaymondCode/simple-demo/models"
+	"github.com/RaymondCode/simple-demo/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"path/filepath"
 )
 
 type VideoListResponse struct {
-	models.Response
-	VideoList []models.Video `json:"video_list"`
+	model.Response
+	VideoList []model.Video `json:"video_list"`
 }
 
 //todo
@@ -19,9 +19,9 @@ type VideoListResponse struct {
 // Publish check token then save upload file to public directory
 func Publish(c *gin.Context) {
 	token := c.PostForm("token")
-	user, err := models.NewUserDaoInstance().QueryUserByToken(token)
+	user, err := model.NewUserDaoInstance().QueryUserByToken(token)
 	if err != nil {
-		c.JSON(http.StatusOK, models.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
+		c.JSON(http.StatusOK, model.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
 		return
 	}
 
@@ -29,7 +29,7 @@ func Publish(c *gin.Context) {
 
 	data, err := c.FormFile("data")
 	if err != nil {
-		c.JSON(http.StatusOK, models.Response{
+		c.JSON(http.StatusOK, model.Response{
 			StatusCode: 1,
 			StatusMsg:  err.Error(),
 		})
@@ -39,24 +39,24 @@ func Publish(c *gin.Context) {
 	finalName := fmt.Sprintf("%d_%s", user.Id, filename)
 	saveFile := filepath.Join("./public/", finalName)
 	if err := c.SaveUploadedFile(data, saveFile); err != nil {
-		c.JSON(http.StatusOK, models.Response{
+		c.JSON(http.StatusOK, model.Response{
 			StatusCode: 1,
 			StatusMsg:  err.Error(),
 		})
 		return
 	}
-	c.JSON(http.StatusOK, models.Response{
+	c.JSON(http.StatusOK, model.Response{
 		StatusCode: 0,
 		StatusMsg:  finalName + " uploaded successfully",
 	})
 	playUrl := define.URL + "/static/" + finalName
-	var video models.Video
+	var video model.Video
 	video.AuthorId = user.Id
 	video.PlayUrl = playUrl
 	video.CoverUrl = "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg"
 	video.Title = title
-	if err := models.NewVideoDaoInstance().PublishVideo(&video); err != nil {
-		c.JSON(http.StatusOK, models.Response{
+	if err := model.NewVideoDaoInstance().PublishVideo(&video); err != nil {
+		c.JSON(http.StatusOK, model.Response{
 			StatusCode: 1,
 			StatusMsg:  err.Error(),
 		})
@@ -66,9 +66,9 @@ func Publish(c *gin.Context) {
 
 func PublishList(c *gin.Context) {
 	token := c.Query("token")
-	videos := models.NewVideoDaoInstance().MQueryVideoByToken(token)
+	videos := model.NewVideoDaoInstance().MQueryVideoByToken(token)
 	c.JSON(http.StatusOK, VideoListResponse{
-		Response: models.Response{
+		Response: model.Response{
 			StatusCode: 0,
 		},
 		VideoList: videos,

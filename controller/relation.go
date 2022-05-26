@@ -2,15 +2,15 @@ package controller
 
 import (
 	"fmt"
-	"github.com/RaymondCode/simple-demo/models"
+	"github.com/RaymondCode/simple-demo/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 )
 
 type UserListResponse struct {
-	models.Response
-	UserList []models.User `json:"user_list"`
+	model.Response
+	UserList []model.User `json:"user_list"`
 }
 
 func RelationAction(c *gin.Context) {
@@ -21,28 +21,28 @@ func RelationAction(c *gin.Context) {
 	toUserIdString := c.Query("to_user_id")
 	toUserId, _ := strconv.Atoi(toUserIdString)
 	actionType := c.Query("action_type") //1-关注，2-取消关注
-	user, err := models.NewUserDaoInstance().QueryUserByToken(token)
+	user, err := model.NewUserDaoInstance().QueryUserByToken(token)
 	if err == nil {
-		c.JSON(http.StatusOK, models.Response{StatusCode: 0})
+		c.JSON(http.StatusOK, model.Response{StatusCode: 0})
 	} else {
-		c.JSON(http.StatusOK, models.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
+		c.JSON(http.StatusOK, model.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
 		return
 	}
 	fmt.Println("user_id----------", user.Id)
 	fmt.Println("to_user_id----------", toUserId)
 	fmt.Println("action_type----------", actionType)
 	if actionType == "1" {
-		relation, _ := models.NewRelationDaoInstance().QueryRelation(user.Id, toUserId)
+		relation, _ := model.NewRelationDaoInstance().QueryRelation(user.Id, toUserId)
 		relation.UserId = user.Id
 		relation.ToUserId = toUserId
-		models.NewRelationDaoInstance().CreateRelation(relation)
+		model.NewRelationDaoInstance().CreateRelation(relation)
 	} else {
-		relation, err := models.NewRelationDaoInstance().QueryRelation(user.Id, toUserId)
+		relation, err := model.NewRelationDaoInstance().QueryRelation(user.Id, toUserId)
 		if err != nil {
-			c.JSON(http.StatusOK, models.Response{StatusCode: 1, StatusMsg: "no Relation !!!!!!"})
+			c.JSON(http.StatusOK, model.Response{StatusCode: 1, StatusMsg: "no Relation !!!!!!"})
 			return
 		}
-		models.NewRelationDaoInstance().DeleteRelation(relation)
+		model.NewRelationDaoInstance().DeleteRelation(relation)
 	}
 }
 
@@ -50,10 +50,10 @@ func RelationAction(c *gin.Context) {
 func FollowList(c *gin.Context) {
 	userIdString := c.Query("user_id")
 	userId, _ := strconv.Atoi(userIdString)
-	ids := models.NewRelationDaoInstance().QueryRelationByUserId(userId)
-	users := models.NewUserDaoInstance().MQueryUserById(ids)
+	ids := model.NewRelationDaoInstance().QueryRelationByUserId(userId)
+	users := model.NewUserDaoInstance().MQueryUserById(ids)
 	c.JSON(http.StatusOK, UserListResponse{
-		Response: models.Response{
+		Response: model.Response{
 			StatusCode: 0,
 		},
 		UserList: users,
@@ -64,10 +64,10 @@ func FollowList(c *gin.Context) {
 func FollowerList(c *gin.Context) {
 	userIdString := c.Query("user_id")
 	userId, _ := strconv.Atoi(userIdString)
-	ids := models.NewRelationDaoInstance().QueryRelationByToUserId(userId)
-	users := models.NewUserDaoInstance().MQueryUserById(ids)
+	ids := model.NewRelationDaoInstance().QueryRelationByToUserId(userId)
+	users := model.NewUserDaoInstance().MQueryUserById(ids)
 	c.JSON(http.StatusOK, UserListResponse{
-		Response: models.Response{
+		Response: model.Response{
 			StatusCode: 0,
 		},
 		UserList: users,

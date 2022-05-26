@@ -1,7 +1,7 @@
-package models
+package model
 
 import (
-	"github.com/RaymondCode/simple-demo/utils"
+	"github.com/RaymondCode/simple-demo/util"
 	"gorm.io/gorm"
 	"sync"
 )
@@ -49,7 +49,7 @@ func (*VideoDao) MQueryVideo() []Video {
 		return nil
 	}
 	if err != nil {
-		utils.Logger.Error("find videos error:" + err.Error())
+		util.Logger.Error("find videos error:" + err.Error())
 		return nil
 	}
 	for i := range videos {
@@ -69,7 +69,7 @@ func (*VideoDao) MQueryVideoByToken(token string) []Video {
 		return nil
 	}
 	if err != nil {
-		utils.Logger.Error("find videos by token error:" + err.Error())
+		util.Logger.Error("find videos by token error:" + err.Error())
 		return nil
 	}
 	for i := range videos {
@@ -85,7 +85,7 @@ func (*VideoDao) MQueryVideoByIds(videoIds []int) []Video {
 		return nil
 	}
 	if err != nil {
-		utils.Logger.Error("find videos by ids error:" + err.Error())
+		util.Logger.Error("find videos by ids error:" + err.Error())
 		return nil
 	}
 	for i := range videos {
@@ -97,7 +97,7 @@ func (*VideoDao) MQueryVideoByIds(videoIds []int) []Video {
 func (*VideoDao) PublishVideo(video *Video) error {
 	err := db.Create(&video).Error
 	if err != nil {
-		utils.Logger.Error("create video err:" + err.Error())
+		util.Logger.Error("create video err:" + err.Error())
 		return err
 	}
 	return nil

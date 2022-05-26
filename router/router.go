@@ -1,4 +1,4 @@
-package routers
+package router
 
 import (
 	"github.com/RaymondCode/simple-demo/controller"
