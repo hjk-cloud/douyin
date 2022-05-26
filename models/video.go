@@ -78,6 +78,22 @@ func (*VideoDao) MQueryVideoByToken(token string) []Video {
 	return videos
 }
 
+func (*VideoDao) MQueryVideoByIds(videoIds []int) []Video {
+	var videos []Video
+	err := db.Where("id in ?", videoIds).Find(&videos).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil
+	}
+	if err != nil {
+		utils.Logger.Error("find videos by ids error:" + err.Error())
+		return nil
+	}
+	for i := range videos {
+		videos[i].Author = NewVideoDaoInstance().BuildAuthor(videos[i])
+	}
+	return videos
+}
+
 func (*VideoDao) PublishVideo(video *Video) error {
 	err := db.Create(&video).Error
 	if err != nil {

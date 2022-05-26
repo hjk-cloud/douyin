@@ -1,9 +1,11 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/RaymondCode/simple-demo/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 // usersLoginInfo use map to store user info, and key is username+password for demo
@@ -64,6 +66,7 @@ func Login(c *gin.Context) {
 	token := username + password
 
 	user, err := models.NewUserDaoInstance().Login(username, password)
+	fmt.Println("login-----user_id----", user.Id)
 	if err == nil {
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: models.Response{StatusCode: 0},
@@ -78,6 +81,9 @@ func Login(c *gin.Context) {
 }
 
 func UserInfo(c *gin.Context) {
+	userIdString := c.Query("user_id")
+	userId, _ := strconv.Atoi(userIdString)
+	fmt.Println("user_id----------", userId)
 	token := c.Query("token")
 	user, err := models.NewUserDaoInstance().QueryUserByToken(token)
 	if user != nil && err == nil {

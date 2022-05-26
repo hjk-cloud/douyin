@@ -43,6 +43,30 @@ INSERT INTO `comment` VALUES (1,5,1,'快跑啊！！！','05-23'),(2,2,1,'为什
 UNLOCK TABLES;
 
 --
+-- Table structure for table `favorite`
+--
+
+DROP TABLE IF EXISTS `favorite`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `favorite` (
+  `user_id` int DEFAULT NULL,
+  `video_id` int DEFAULT NULL,
+  UNIQUE KEY `favorite_pk` (`user_id`,`video_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `favorite`
+--
+
+LOCK TABLES `favorite` WRITE;
+/*!40000 ALTER TABLE `favorite` DISABLE KEYS */;
+INSERT INTO `favorite` VALUES (2,2),(3,1),(3,2),(3,4);
+/*!40000 ALTER TABLE `favorite` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `relation`
 --
 
@@ -62,7 +86,7 @@ CREATE TABLE `relation` (
 
 LOCK TABLES `relation` WRITE;
 /*!40000 ALTER TABLE `relation` DISABLE KEYS */;
-INSERT INTO `relation` VALUES (2,3),(3,1),(3,4),(3,5),(5,3);
+INSERT INTO `relation` VALUES (2,3),(3,1),(3,2),(3,5),(5,3);
 /*!40000 ALTER TABLE `relation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,7 +145,7 @@ CREATE TABLE `video` (
 
 LOCK TABLES `video` WRITE;
 /*!40000 ALTER TABLE `video` DISABLE KEYS */;
-INSERT INTO `video` VALUES (1,3,'https://www.w3schools.com/html/movie.mp4','https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg',3,5,0,'熊来了！！'),(2,4,'https://www.w3schools.com/html/mov_bbb.mp4','https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg',0,0,0,'熊又来了'),(3,1,'http://192.168.134.188:8080/static/3_VID_20220522_213535.mp4','https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg',1,1,0,'熊不走了..'),(4,3,'http://192.168.134.188:8080/static/3_VID_20220524_225242.mp4','https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg',0,0,0,'早点睡觉');
+INSERT INTO `video` VALUES (1,3,'https://www.w3schools.com/html/movie.mp4','https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg',3,5,0,'熊来了！！'),(2,4,'http://192.168.134.188:8080/static/bear.mp4','https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg',0,0,0,'熊又来了'),(3,1,'http://192.168.134.188:8080/static/3_VID_20220522_213535.mp4','https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg',1,1,0,'熊不走了..'),(4,3,'http://192.168.134.188:8080/static/3_VID_20220524_225242.mp4','https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg',0,0,0,'早点睡觉');
 /*!40000 ALTER TABLE `video` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -134,4 +158,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-05-25 15:33:54
+-- Dump completed on 2022-05-26  9:44:28
