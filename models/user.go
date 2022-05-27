@@ -2,7 +2,7 @@ package models
 
 import (
 	"errors"
-	"github.com/RaymondCode/simple-demo/util"
+	"github.com/hjk-cloud/douyin/util"
 	"gorm.io/gorm"
 	"sync"
 )

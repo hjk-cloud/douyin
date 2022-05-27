@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/RaymondCode/simple-demo/models"
-	"github.com/RaymondCode/simple-demo/routers"
 	"github.com/gin-gonic/gin"
+	"github.com/hjk-cloud/douyin/models"
+	"github.com/hjk-cloud/douyin/routers"
 )
 
 func main() {

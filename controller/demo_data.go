@@ -1,6 +1,6 @@
 package controller
 
-import "github.com/RaymondCode/simple-demo/models"
+import "github.com/hjk-cloud/douyin/models"
 
 var DemoVideos = []models.Video{
 	{

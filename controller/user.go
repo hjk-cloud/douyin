@@ -2,9 +2,9 @@ package controller
 
 import (
 	"fmt"
-	"github.com/RaymondCode/simple-demo/models"
-	"github.com/RaymondCode/simple-demo/service"
 	"github.com/gin-gonic/gin"
+	"github.com/hjk-cloud/douyin/models"
+	"github.com/hjk-cloud/douyin/service"
 	"net/http"
 	"strconv"
 )

@@ -2,8 +2,8 @@ package jwt
 
 import (
 	"errors"
-	"github.com/RaymondCode/simple-demo/models"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/hjk-cloud/douyin/models"
 	"time"
 )
 

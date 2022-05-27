@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"github.com/RaymondCode/simple-demo/models"
 	"github.com/gin-gonic/gin"
+	"github.com/hjk-cloud/douyin/models"
 	"net/http"
 	"strconv"
 )

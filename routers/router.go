@@ -1,8 +1,8 @@
 package routers
 
 import (
-	"github.com/RaymondCode/simple-demo/controller"
 	"github.com/gin-gonic/gin"
+	"github.com/hjk-cloud/douyin/controller"
 )
 
 func InitRouter(r *gin.Engine) {

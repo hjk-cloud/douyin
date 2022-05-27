@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/RaymondCode/simple-demo/define"
+	"github.com/hjk-cloud/douyin/define"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"

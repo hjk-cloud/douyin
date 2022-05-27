@@ -2,8 +2,8 @@ package service
 
 import (
 	"errors"
-	"github.com/RaymondCode/simple-demo/models"
-	"github.com/RaymondCode/simple-demo/util/jwt"
+	"github.com/hjk-cloud/douyin/models"
+	"github.com/hjk-cloud/douyin/util/jwt"
 )
 
 const (
