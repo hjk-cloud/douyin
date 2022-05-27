@@ -1,6 +1,7 @@
-package model
+package models
 
 import (
+	"errors"
 	"github.com/RaymondCode/simple-demo/util"
 	"gorm.io/gorm"
 	"sync"
@@ -12,7 +13,7 @@ type User struct {
 	Password      string `gorm:"column:password;type:varchar(10);" json:"password"`
 	FollowCount   int    `gorm:"column:follow_count;type:int" json:"follow_count,omitempty"`
 	FollowerCount int    `gorm:"column:follower_count;type:int" json:"follower_count,omitempty"`
-	IsFollow      bool   `gorm:"column:is_follow;type:tinyint(1)" json:"is_follow,omitempty"`
+	IsFollow      bool   `json:"is_follow,omitempty"`
 	Token         string `json:"token"`
 }
 
@@ -90,20 +91,19 @@ func (*UserDao) QueryUserByName(name string) (*User, error) {
 	}
 	if err != nil {
 		util.Logger.Error("find user by id err:" + err.Error())
-		return nil, err
+		return nil, errors.New("用户已存在")
 	}
 	return &user, nil
 }
 
-func (*UserDao) Login(name string, password string) (*User, error) {
-	var user User
+func (*UserDao) Login(name string, password string, user *User) error {
 	err := db.Where("name = ? AND password = ?", name, password).Take(&user).Error
 	if err == gorm.ErrRecordNotFound {
-		return nil, err
+		return err
 	}
 	if err != nil {
 		util.Logger.Error("login err:" + err.Error())
-		return nil, err
+		return err
 	}
-	return &user, nil
+	return nil
 }

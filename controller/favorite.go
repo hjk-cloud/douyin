@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/RaymondCode/simple-demo/model"
+	"github.com/RaymondCode/simple-demo/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -9,11 +9,11 @@ import (
 
 func FavoriteAction(c *gin.Context) {
 	token := c.Query("token")
-	user, err := model.NewUserDaoInstance().QueryUserByToken(token)
+	user, err := models.NewUserDaoInstance().QueryUserByToken(token)
 	if err == nil {
-		c.JSON(http.StatusOK, model.Response{StatusCode: 0})
+		c.JSON(http.StatusOK, Response{StatusCode: 0})
 	} else {
-		c.JSON(http.StatusOK, model.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
+		c.JSON(http.StatusOK, Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
 	}
 	//userIdString := c.Query("user_id")
 	//userId, _ := strconv.Atoi(userIdString)
@@ -21,30 +21,31 @@ func FavoriteAction(c *gin.Context) {
 	videoIdString := c.Query("video_id")
 	actionType := c.Query("action_type") //1-点赞，2-取消点赞
 	videoId, _ := strconv.Atoi(videoIdString)
-	var favorite model.Favorite
+	var favorite models.Favorite
 	favorite.UserId = userId
 	favorite.VideoId = videoId
 	if actionType == "1" {
-		if err := model.NewFavoriteDaoInstance().CreateFavorite(favorite); err == nil {
-			c.JSON(http.StatusOK, model.Response{StatusCode: 0})
+		if err := models.NewFavoriteDaoInstance().CreateFavorite(favorite); err == nil {
+			c.JSON(http.StatusOK, Response{StatusCode: 0})
 		}
 	} else if actionType == "2" {
-		if err := model.NewFavoriteDaoInstance().DeleteFavorite(favorite); err == nil {
-			c.JSON(http.StatusOK, model.Response{StatusCode: 0})
+		if err := models.NewFavoriteDaoInstance().DeleteFavorite(favorite); err == nil {
+			c.JSON(http.StatusOK, Response{StatusCode: 0})
 		} else {
-			c.JSON(http.StatusOK, model.Response{StatusCode: 1, StatusMsg: "operate fail..."})
+			c.JSON(http.StatusOK, Response{StatusCode: 1, StatusMsg: "operate fail..."})
 		}
 	}
+	//todo favorite_count +1 / -1
 }
 
 func FavoriteList(c *gin.Context) {
 	//token := c.Query("token")
 	userIdString := c.Query("user_id")
 	userId, _ := strconv.Atoi(userIdString)
-	videoIds := model.NewFavoriteDaoInstance().QueryFavoriteVideo(userId)
-	videos := model.NewVideoDaoInstance().MQueryVideoByIds(videoIds)
+	videoIds := models.NewFavoriteDaoInstance().QueryFavoriteVideo(userId)
+	videos := models.NewVideoDaoInstance().MQueryVideoByIds(videoIds)
 	c.JSON(http.StatusOK, VideoListResponse{
-		Response: model.Response{
+		Response: Response{
 			StatusCode: 0,
 		},
 		VideoList: videos,

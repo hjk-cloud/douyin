@@ -1,17 +1,17 @@
 package main
 
 import (
-	"github.com/RaymondCode/simple-demo/model"
-	"github.com/RaymondCode/simple-demo/router"
+	"github.com/RaymondCode/simple-demo/models"
+	"github.com/RaymondCode/simple-demo/routers"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	model.Init()
+	models.Init()
 
 	r := gin.Default()
 
-	router.InitRouter(r)
+	routers.InitRouter(r)
 
 	r.Run()
 }

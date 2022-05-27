@@ -1,8 +1,8 @@
 package controller
 
-import "github.com/RaymondCode/simple-demo/model"
+import "github.com/RaymondCode/simple-demo/models"
 
-var DemoVideos = []model.Video{
+var DemoVideos = []models.Video{
 	{
 		Id:            1,
 		Author:        DemoUser,
@@ -14,7 +14,7 @@ var DemoVideos = []model.Video{
 	},
 }
 
-var DemoComments = []model.Comment{
+var DemoComments = []models.Comment{
 	{
 		Id:         1,
 		User:       DemoUser,
@@ -23,7 +23,7 @@ var DemoComments = []model.Comment{
 	},
 }
 
-var DemoUser = model.User{
+var DemoUser = models.User{
 	Id:            1,
 	Name:          "TestUser",
 	FollowCount:   0,
