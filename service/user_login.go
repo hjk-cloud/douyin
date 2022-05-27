@@ -15,11 +15,12 @@ const (
 type LoginFlow struct {
 	Username string
 	Password string
-	Token    string
 	User     *models.User
+	UserId   int
+	Token    string
 }
 
-func Login(username string, password string) (*models.User, error) {
+func UserLogin(username string, password string) (*models.User, error) {
 	return NewLoginFlow(username, password).Do()
 }
 
@@ -61,6 +62,7 @@ func (f *LoginFlow) prepareData() error {
 	if err := userDao.Login(f.Username, f.Password, f.User); err != nil {
 		return err
 	}
+	f.UserId = f.User.Id
 	token, err := jwt.GenToken(f.Username)
 	if err != nil {
 		return err
@@ -71,9 +73,8 @@ func (f *LoginFlow) prepareData() error {
 
 func (f *LoginFlow) packData() error {
 	f.User = &models.User{
-		Name:     f.Username,
-		Password: f.Password,
-		Token:    f.Token,
+		Id:    f.UserId,
+		Token: f.Token,
 	}
 	return nil
 }

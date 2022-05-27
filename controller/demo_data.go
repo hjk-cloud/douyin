@@ -28,5 +28,4 @@ var DemoUser = models.User{
 	Name:          "TestUser",
 	FollowCount:   0,
 	FollowerCount: 0,
-	IsFollow:      false,
 }

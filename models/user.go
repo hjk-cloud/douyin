@@ -13,7 +13,6 @@ type User struct {
 	Password      string `gorm:"column:password;type:varchar(10);" json:"password"`
 	FollowCount   int    `gorm:"column:follow_count;type:int" json:"follow_count,omitempty"`
 	FollowerCount int    `gorm:"column:follower_count;type:int" json:"follower_count,omitempty"`
-	IsFollow      bool   `json:"is_follow,omitempty"`
 	Token         string `json:"token"`
 }
 
@@ -36,10 +35,9 @@ func NewUserDaoInstance() *UserDao {
 }
 
 func (*UserDao) Register(user *User) error {
-	err := db.Create(&user).Error
+	err := db.Omit("token").Create(&user).Error
 	if err != nil {
-		util.Logger.Error("create user err:" + err.Error())
-		return err
+		return errors.New("创建用户失败")
 	}
 	return nil
 }
@@ -51,8 +49,7 @@ func (*UserDao) QueryUserById(id int) (*User, error) {
 		return nil, nil
 	}
 	if err != nil {
-		util.Logger.Error("find user by id err:" + err.Error())
-		return nil, err
+		return nil, errors.New("未查询用户id")
 	}
 	return &user, nil
 }
@@ -64,7 +61,6 @@ func (*UserDao) MQueryUserById(ids []int) []User {
 		return nil
 	}
 	if err != nil {
-		util.Logger.Error("find user by id err:" + err.Error())
 		return nil
 	}
 	return users
@@ -83,17 +79,13 @@ func (*UserDao) QueryUserByToken(token string) (*User, error) {
 	return &user, nil
 }
 
-func (*UserDao) QueryUserByName(name string) (*User, error) {
-	var user User
-	err := db.Where("name = ?", name).Take(&user).Error
+func (*UserDao) QueryUserByName(name string) (int, error) {
+	var count int64
+	err := db.Where("name = ?", name).Count(&count).Error
 	if err == gorm.ErrRecordNotFound {
-		return nil, nil
+		return 1, nil
 	}
-	if err != nil {
-		util.Logger.Error("find user by id err:" + err.Error())
-		return nil, errors.New("用户已存在")
-	}
-	return &user, nil
+	return int(count), nil
 }
 
 func (*UserDao) Login(name string, password string, user *User) error {

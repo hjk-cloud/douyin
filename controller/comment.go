@@ -23,13 +23,13 @@ func CommentAction(c *gin.Context) {
 	token := c.Query("token")
 	actionType := c.Query("action_type")
 
-	if user, exist := usersLoginInfo[token]; exist {
+	if user, err := models.NewUserDaoInstance().QueryUserByToken(token); err == nil {
 		if actionType == "1" {
 			text := c.Query("comment_text")
 			c.JSON(http.StatusOK, CommentActionResponse{Response: Response{StatusCode: 0},
 				Comment: models.Comment{
 					Id:         1,
-					User:       user,
+					User:       *user,
 					Content:    text,
 					CreateDate: "05-01",
 				}})

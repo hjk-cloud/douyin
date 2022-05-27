@@ -9,19 +9,6 @@ import (
 	"strconv"
 )
 
-// usersLoginInfo use map to store user info, and key is username+password for demo
-// user data will be cleared every time the server starts
-// test data: username=zhanglei, password=douyin
-var usersLoginInfo = map[string]models.User{
-	"zhangleidouyin": {
-		Id:            1,
-		Name:          "zhanglei",
-		FollowCount:   10,
-		FollowerCount: 5,
-		IsFollow:      true,
-	},
-}
-
 var userIdSequence = int(1)
 
 type UserLoginResponse struct {
@@ -39,24 +26,17 @@ func Register(c *gin.Context) {
 	username := c.Query("username")
 	password := c.Query("password")
 
-	token := username + password
+	user, err := service.UserRegister(username, password)
 
-	_, err := models.NewUserDaoInstance().QueryUserByName(username)
-	if err != nil {
-		c.JSON(http.StatusOK, UserLoginResponse{
-			Response: Response{StatusCode: 1, StatusMsg: err.Error()},
-		})
-	} else {
-		newUser := models.User{
-			Name:     username,
-			Password: password,
-			Token:    token,
-		}
-		err = models.NewUserDaoInstance().Register(&newUser)
+	if err == nil {
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: Response{StatusCode: 0},
-			UserId:   userIdSequence,
-			Token:    token,
+			UserId:   user.Id,
+			Token:    user.Token,
+		})
+	} else {
+		c.JSON(http.StatusOK, UserLoginResponse{
+			Response: Response{StatusCode: 1, StatusMsg: err.Error()},
 		})
 	}
 }
@@ -65,7 +45,7 @@ func Login(c *gin.Context) {
 	username := c.Query("username")
 	password := c.Query("password")
 
-	user, err := service.Login(username, password)
+	user, err := service.UserLogin(username, password)
 
 	if err == nil {
 		c.JSON(http.StatusOK, UserLoginResponse{
