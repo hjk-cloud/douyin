@@ -65,7 +65,7 @@ func (f *UserRegisterFlow) Register() error {
 	if err != nil {
 		return err
 	}
-	token, err := jwt.GenToken(f.Username)
+	token, err := jwt.GenToken(user.Id)
 	if err != nil {
 		return err
 	}

@@ -58,6 +58,15 @@ func (*RelationDao) QueryRelationByUserId(userId int) []int {
 	return ids
 }
 
+func (*RelationDao) QueryRelationCountByUserId(userId int) (int, error) {
+	var count int64
+	err := db.Table("relation").Where("user_id = ?", userId).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	return int(count), nil
+}
+
 func (*RelationDao) QueryRelationByToUserId(userId int) []int {
 	ids := make([]int, 0)
 	err := db.Table("relation").Select("user_id").Where("to_user_id = ?", userId).Find(&ids).Error
@@ -69,6 +78,15 @@ func (*RelationDao) QueryRelationByToUserId(userId int) []int {
 		return nil
 	}
 	return ids
+}
+
+func (*RelationDao) QueryRelationCountByToUserId(userId int) (int, error) {
+	var count int64
+	err := db.Table("relation").Where("to_user_id = ?", userId).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	return int(count), nil
 }
 
 func (*RelationDao) QueryRelation(userId int, toUserId int) (Relation, error) {

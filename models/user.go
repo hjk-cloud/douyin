@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"github.com/hjk-cloud/douyin/util"
 	"gorm.io/gorm"
 	"sync"
 )
@@ -35,7 +34,7 @@ func NewUserDaoInstance() *UserDao {
 }
 
 func (*UserDao) Register(user *User) error {
-	err := db.Omit("token").Create(&user).Error
+	err := db.Select("name", "password").Create(&user).Error
 	if err != nil {
 		return errors.New("创建用户失败")
 	}
@@ -66,19 +65,6 @@ func (*UserDao) MQueryUserById(ids []int) []User {
 	return users
 }
 
-func (*UserDao) QueryUserByToken(token string) (*User, error) {
-	var user User
-	err := db.Where("token = ?", token).Take(&user).Error
-	if err == gorm.ErrRecordNotFound {
-		return nil, nil
-	}
-	if err != nil {
-		util.Logger.Error("find user by  token err:" + err.Error())
-		return nil, err
-	}
-	return &user, nil
-}
-
 func (*UserDao) QueryUserByName(name string) (int, error) {
 	var count int64
 	err := db.Where("name = ?", name).Count(&count).Error
@@ -95,7 +81,6 @@ func (*UserDao) Login(name string, password string) (int, error) {
 		return 0, err
 	}
 	if err != nil {
-		util.Logger.Error("login err:" + err.Error())
 		return 0, err
 	}
 	return user.Id, nil

@@ -10,7 +10,6 @@ var DemoVideos = []models.Video{
 		CoverUrl:      "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg",
 		FavoriteCount: 5,
 		CommentCount:  3,
-		IsFavorite:    false,
 	},
 }
 

@@ -8,9 +8,11 @@ import (
 )
 
 type UserInfoFlow struct {
-	UserId string
-	Token  string
-	User   *models.User
+	UserId        string
+	Token         string
+	User          *models.User
+	FollowCount   int
+	FollowerCount int
 }
 
 func UserInfo(token string, userId string) (*models.User, error) {
@@ -25,6 +27,9 @@ func (f *UserInfoFlow) Do() (*models.User, error) {
 	if err := f.checkParam(); err != nil {
 		return nil, err
 	}
+	if err := f.prepareData(); err != nil {
+		return nil, err
+	}
 	if err := f.packData(); err != nil {
 		return nil, err
 	}
@@ -32,12 +37,28 @@ func (f *UserInfoFlow) Do() (*models.User, error) {
 }
 
 func (f *UserInfoFlow) checkParam() error {
-	if _, err := jwt.JWTAuth(f.Token); err != nil {
-		return err
-	}
 	if f.UserId == "" {
 		return errors.New("id为空")
 	}
+	return nil
+}
+
+func (f *UserInfoFlow) prepareData() error {
+	userId, err := jwt.JWTAuth(f.Token)
+	if err != nil {
+		return err
+	}
+	relationDao := models.NewRelationDaoInstance()
+	followCount, err := relationDao.QueryRelationCountByUserId(userId)
+	if err != nil {
+		return err
+	}
+	f.FollowCount = followCount
+	followerCount, err := relationDao.QueryRelationCountByToUserId(userId)
+	if err != nil {
+		return err
+	}
+	f.FollowerCount = followerCount
 	return nil
 }
 
@@ -49,5 +70,7 @@ func (f *UserInfoFlow) packData() error {
 		return err
 	}
 	f.User = user
+	f.User.FollowCount = f.FollowCount
+	f.User.FollowerCount = f.FollowerCount
 	return nil
 }

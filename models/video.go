@@ -4,18 +4,19 @@ import (
 	"github.com/hjk-cloud/douyin/util"
 	"gorm.io/gorm"
 	"sync"
+	"time"
 )
 
 type Video struct {
-	Id            int    `gorm:"column:id;type:int" json:"id,omitempty"`
-	AuthorId      int    `gorm:"column:author_id" json:"author_id,omitempty"`
-	Author        User   `json:"author"`
-	PlayUrl       string `gorm:"column:play_url;type:varchar(255)" json:"play_url"`
-	CoverUrl      string `gorm:"column:cover_url;type:varchar(255)" json:"cover_url"`
-	FavoriteCount int    `gorm:"column:favorite_count;type:int" json:"favorite_count,omitempty"`
-	CommentCount  int    `gorm:"column:comment_count;type:int" json:"comment_count,omitempty"`
-	IsFavorite    bool   `gorm:"column:is_favorite;type:tinyint(1)" json:"is_favorite,omitempty"`
-	Title         string `json:"title,omitempty"`
+	Id            int       `gorm:"column:id;type:int" json:"id,omitempty"`
+	AuthorId      int       `gorm:"column:author_id" json:"author_id,omitempty"`
+	Author        User      `json:"author"`
+	PlayUrl       string    `gorm:"column:play_url;type:varchar(255)" json:"play_url"`
+	CoverUrl      string    `gorm:"column:cover_url;type:varchar(255)" json:"cover_url"`
+	FavoriteCount int       `json:"favorite_count,omitempty"`
+	CommentCount  int       `json:"comment_count,omitempty"`
+	Title         string    `json:"title,omitempty"`
+	CreatedAt     time.Time `json:"-"`
 }
 
 func (Video) TableName() string {
@@ -36,68 +37,61 @@ func NewVideoDaoInstance() *VideoDao {
 	return videoDao
 }
 
-func (*VideoDao) BuildAuthor(video Video) User {
+func (*VideoDao) BuildAuthor(video *Video) error {
 	user, _ := NewUserDaoInstance().QueryUserById(video.AuthorId)
 	video.Author = *user
-	return video.Author
+	return nil
 }
 
-func (*VideoDao) MQueryVideo() []Video {
-	var videos []Video
+func (*VideoDao) MQueryVideo(videos *[]*Video) error {
 	err := db.Order("id desc").Limit(30).Find(&videos).Error
 	if err == gorm.ErrRecordNotFound {
-		return nil
+		return err
 	}
 	if err != nil {
-		util.Logger.Error("find videos error:" + err.Error())
-		return nil
+		return err
 	}
-	for i := range videos {
-		videos[i].Author = NewVideoDaoInstance().BuildAuthor(videos[i])
-	}
-	return videos
+	return nil
 }
 
-func (*VideoDao) MQueryVideoByToken(token string) []Video {
-	user, err := NewUserDaoInstance().QueryUserByToken(token)
-	if err == gorm.ErrRecordNotFound {
-		return nil
-	}
-	var videos []Video
-	err = db.Where("author_id = ?", user.Id).Find(&videos).Error
-	if err == gorm.ErrRecordNotFound {
-		return nil
-	}
-	if err != nil {
-		util.Logger.Error("find videos by token error:" + err.Error())
-		return nil
-	}
-	for i := range videos {
-		videos[i].Author = NewVideoDaoInstance().BuildAuthor(videos[i])
-	}
-	return videos
+func (*VideoDao) MQueryVideoByToken(token string, videos []*Video) error {
+	//if err == gorm.ErrRecordNotFound {
+	//	return err
+	//}
+	//err = db.Where("author_id = ?", user.Id).Find(&videos).Error
+	//if err == gorm.ErrRecordNotFound {
+	//	return err
+	//}
+	//if err != nil {
+	//	util.Logger.Error("find videos by token error:" + err.Error())
+	//	return err
+	//}
+	//for i := range videos {
+	//	NewVideoDaoInstance().BuildAuthor(videos[i])
+	//}
+	return nil
 }
 
-func (*VideoDao) MQueryVideoByIds(videoIds []int) []Video {
-	var videos []Video
+func (*VideoDao) MQueryVideoByIds(videoIds []int) error {
+	var videos []*Video
 	err := db.Where("id in ?", videoIds).Find(&videos).Error
 	if err == gorm.ErrRecordNotFound {
-		return nil
+		return err
 	}
 	if err != nil {
 		util.Logger.Error("find videos by ids error:" + err.Error())
-		return nil
+		return err
 	}
 	for i := range videos {
-		videos[i].Author = NewVideoDaoInstance().BuildAuthor(videos[i])
+		NewVideoDaoInstance().BuildAuthor(videos[i])
 	}
-	return videos
+	return nil
 }
 
 func (*VideoDao) PublishVideo(video *Video) error {
-	err := db.Create(&video).Error
+	err := db.Select("author_id", "play_url", "cover_url", "title", "created_at").
+		Create(&video).Error
 	if err != nil {
-		util.Logger.Error("create video err:" + err.Error())
 		return err
 	}
 	return nil

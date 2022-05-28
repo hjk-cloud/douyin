@@ -64,7 +64,7 @@ func (f *LoginFlow) prepareData() error {
 		return err
 	}
 	f.UserId = userId
-	token, err := jwt.GenToken(f.Username)
+	token, err := jwt.GenToken(userId)
 	if err != nil {
 		return err
 	}
