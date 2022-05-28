@@ -88,14 +88,15 @@ func (*UserDao) QueryUserByName(name string) (int, error) {
 	return int(count), nil
 }
 
-func (*UserDao) Login(name string, password string, user *User) error {
+func (*UserDao) Login(name string, password string) (int, error) {
+	var user User
 	err := db.Where("name = ? AND password = ?", name, password).Take(&user).Error
 	if err == gorm.ErrRecordNotFound {
-		return err
+		return 0, err
 	}
 	if err != nil {
 		util.Logger.Error("login err:" + err.Error())
-		return err
+		return 0, err
 	}
-	return nil
+	return user.Id, nil
 }

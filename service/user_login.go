@@ -59,10 +59,11 @@ func (f *LoginFlow) checkParam() error {
 
 func (f *LoginFlow) prepareData() error {
 	userDao := models.NewUserDaoInstance()
-	if err := userDao.Login(f.Username, f.Password, f.User); err != nil {
+	userId, err := userDao.Login(f.Username, f.Password)
+	if err != nil {
 		return err
 	}
-	f.UserId = f.User.Id
+	f.UserId = userId
 	token, err := jwt.GenToken(f.Username)
 	if err != nil {
 		return err

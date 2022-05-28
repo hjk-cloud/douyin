@@ -1,15 +1,11 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/hjk-cloud/douyin/models"
 	"github.com/hjk-cloud/douyin/service"
 	"net/http"
-	"strconv"
 )
-
-var userIdSequence = int(1)
 
 type UserLoginResponse struct {
 	Response
@@ -61,19 +57,19 @@ func Login(c *gin.Context) {
 }
 
 func UserInfo(c *gin.Context) {
-	userIdString := c.Query("user_id")
-	userId, _ := strconv.Atoi(userIdString)
-	fmt.Println("user_id----------", userId)
+	userId := c.Query("user_id")
 	token := c.Query("token")
-	user, err := models.NewUserDaoInstance().QueryUserByToken(token)
-	if user != nil && err == nil {
+
+	user, err := service.UserInfo(token, userId)
+
+	if err == nil {
 		c.JSON(http.StatusOK, UserResponse{
 			Response: Response{StatusCode: 0},
 			User:     *user,
 		})
 	} else {
-		c.JSON(http.StatusOK, UserResponse{
-			Response: Response{StatusCode: 1, StatusMsg: "user info---User doesn't exist"},
+		c.JSON(http.StatusOK, UserLoginResponse{
+			Response: Response{StatusCode: 1, StatusMsg: err.Error()},
 		})
 	}
 }
