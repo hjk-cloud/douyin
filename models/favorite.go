@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"github.com/hjk-cloud/douyin/util"
 	"gorm.io/gorm"
 	"sync"
@@ -34,7 +35,14 @@ func (*FavoriteDao) CreateFavorite(favorite Favorite) error {
 		util.Logger.Error("insert favorite err:" + err.Error())
 		return err
 	}
+	fmt.Println("Favorite add")
 	return nil
+	//err := db.Table("favorite").Create(&favorite).Error
+	//if err != nil {
+	//	return errors.New("增加点赞失败")
+	//}
+	//fmt.Println("Favorite add")
+	//return nil
 }
 
 func (*FavoriteDao) DeleteFavorite(favorite Favorite) error {
