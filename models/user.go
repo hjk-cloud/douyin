@@ -13,6 +13,7 @@ type User struct {
 	FollowCount   int    `gorm:"column:follow_count;type:int" json:"follow_count,omitempty"`
 	FollowerCount int    `gorm:"column:follower_count;type:int" json:"follower_count,omitempty"`
 	Token         string `json:"token"`
+	IsFollow      bool   `json:"is_follow"`
 }
 
 func (User) TableName() string {

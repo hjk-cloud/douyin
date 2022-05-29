@@ -24,7 +24,7 @@ func keyFunc(_ *jwt.Token) (i interface{}, err error) {
 }
 
 //定义JWT的过期时间
-const TokenExpireDuration = time.Hour * 2
+const TokenExpireDuration = time.Hour * 6
 
 //GenToken 生成 Token
 func GenToken(userId int) (Token string, err error) {

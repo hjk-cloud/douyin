@@ -1,1 +1,61 @@
 package service
+
+import (
+	"fmt"
+	"github.com/hjk-cloud/douyin/models"
+	"github.com/hjk-cloud/douyin/util/jwt"
+)
+
+type FollowListFlow struct {
+	Token  string
+	UserId int
+	Users  []models.User
+}
+
+func RelationFollowList(token string, userId int) ([]models.User, error) {
+	return NewRelationFollowListFlow(token, userId).Do()
+}
+
+func NewRelationFollowListFlow(token string, userId int) *FollowListFlow {
+	return &FollowListFlow{
+		Token:  token,
+		UserId: userId,
+	}
+}
+
+func (f *FollowListFlow) Do() ([]models.User, error) {
+	if err := f.checkParam(); err != nil {
+		return nil, err
+	}
+	if err := f.prepareData(); err != nil {
+		return nil, err
+	}
+	if err := f.packData(); err != nil {
+		return nil, err
+	}
+	return f.Users, nil
+}
+
+func (f *FollowListFlow) checkParam() error {
+	fmt.Println("service---Token----", f.Token)
+	fmt.Println("service---UserId----", f.UserId)
+	_, err := jwt.JWTAuth(f.Token)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (f *FollowListFlow) prepareData() error {
+
+	return nil
+}
+
+func (f *FollowListFlow) packData() error {
+	favoriteDao := models.NewRelationDaoInstance()
+	userDao := models.NewUserDaoInstance()
+
+	toUserIds := favoriteDao.QueryRelationByUserId(f.UserId)
+	f.Users = userDao.MQueryUserById(toUserIds)
+	return nil
+}

@@ -15,7 +15,6 @@ type UserListResponse struct {
 
 func RelationAction(c *gin.Context) {
 	token := c.Query("token")
-	//从前端获取到的user_id一直为0，目前解决方法是根据token获取当前用户user_id
 	userIdString := c.Query("user_id")
 	userId, _ := strconv.Atoi(userIdString)
 	toUserIdString := c.Query("to_user_id")
@@ -33,28 +32,44 @@ func RelationAction(c *gin.Context) {
 
 //关注列表
 func FollowList(c *gin.Context) {
+	token := c.Query("token")
 	userIdString := c.Query("user_id")
 	userId, _ := strconv.Atoi(userIdString)
-	ids := models.NewRelationDaoInstance().QueryRelationByUserId(userId)
-	users := models.NewUserDaoInstance().MQueryUserById(ids)
-	c.JSON(http.StatusOK, UserListResponse{
-		Response: Response{
-			StatusCode: 0,
-		},
-		UserList: users,
-	})
+
+	users, err := service.RelationFollowList(token, userId)
+
+	if err == nil {
+		c.JSON(http.StatusOK, UserListResponse{
+			Response: Response{
+				StatusCode: 0,
+			},
+			UserList: users,
+		})
+	} else {
+		c.JSON(http.StatusOK, UserListResponse{
+			Response: Response{StatusCode: 1, StatusMsg: err.Error()},
+		})
+	}
 }
 
 //粉丝列表
 func FollowerList(c *gin.Context) {
+	token := c.Query("token")
 	userIdString := c.Query("user_id")
 	userId, _ := strconv.Atoi(userIdString)
-	ids := models.NewRelationDaoInstance().QueryRelationByToUserId(userId)
-	users := models.NewUserDaoInstance().MQueryUserById(ids)
-	c.JSON(http.StatusOK, UserListResponse{
-		Response: Response{
-			StatusCode: 0,
-		},
-		UserList: users,
-	})
+
+	users, err := service.RelationFollowerList(token, userId)
+
+	if err == nil {
+		c.JSON(http.StatusOK, UserListResponse{
+			Response: Response{
+				StatusCode: 0,
+			},
+			UserList: users,
+		})
+	} else {
+		c.JSON(http.StatusOK, UserListResponse{
+			Response: Response{StatusCode: 1, StatusMsg: err.Error()},
+		})
+	}
 }

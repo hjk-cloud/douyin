@@ -7,24 +7,24 @@ import (
 	"github.com/hjk-cloud/douyin/util/jwt"
 )
 
-func RelationAction(token string, userId int, toUserId int, actionType string) error {
-	return NewRelationActionFlow(token, userId, toUserId, actionType).Do()
+type RelationActionFlow struct {
+	Token      string
+	UserId     int
+	ToUserId   int
+	ActionType string
 }
 
 func NewRelationActionFlow(token string, userId int, toUserId int, actionType string) *RelationActionFlow {
 	return &RelationActionFlow{
 		Token:      token,
-		userId:     userId,
-		toUserId:   toUserId,
-		actionType: actionType,
+		UserId:     userId,
+		ToUserId:   toUserId,
+		ActionType: actionType,
 	}
 }
 
-type RelationActionFlow struct {
-	Token      string
-	userId     int
-	toUserId   int
-	actionType string
+func RelationAction(token string, userId int, toUserId int, actionType string) error {
+	return NewRelationActionFlow(token, userId, toUserId, actionType).Do()
 }
 
 func (f *RelationActionFlow) Do() error {
@@ -41,31 +41,31 @@ func (f *RelationActionFlow) Do() error {
 }
 
 func (f *RelationActionFlow) checkParam() error {
-	fmt.Println("service-------", f.Token)
-	fmt.Println("service-------", f.userId)
-	fmt.Println("service-------", f.toUserId)
-	fmt.Println("service-------", f.actionType)
+	fmt.Println("service---Token----", f.Token)
+	fmt.Println("service---UserId----", f.UserId)
+	fmt.Println("service---ToUserId----", f.ToUserId)
+	fmt.Println("service---ActionType----", f.ActionType)
 	userId, err := jwt.JWTAuth(f.Token)
-	fmt.Println("service---parseToken---", userId)
 	if err != nil {
 		return err
 	}
-	f.userId = userId
+	//从前端获取到的user_id一直为0，目前解决方法是根据token获取当前用户user_id
+	f.UserId = userId
 	return nil
 }
 
 func (f *RelationActionFlow) prepareData() error {
 	relationDao := models.NewRelationDaoInstance()
-	if f.actionType == "1" {
+	if f.ActionType == "1" {
 		relation := models.Relation{
-			UserId:   f.userId,
-			ToUserId: f.toUserId,
+			UserId:   f.UserId,
+			ToUserId: f.ToUserId,
 		}
 		if err := relationDao.CreateRelation(relation); err != nil {
 			return err
 		}
-	} else if f.actionType == "2" {
-		relation, err := relationDao.QueryRelation(f.userId, f.toUserId)
+	} else if f.ActionType == "2" {
+		relation, err := relationDao.QueryRelation(f.UserId, f.ToUserId)
 		if err != nil {
 			return errors.New("未关注")
 		}

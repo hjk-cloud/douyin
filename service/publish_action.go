@@ -53,7 +53,7 @@ func (f *PublishFlow) prepareData() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("prepareData----userId", userId)
+	fmt.Println("prepareData----UserId", userId)
 	f.AuthorId = userId
 	filename := filepath.Base(f.Data.Filename)
 	finalName := fmt.Sprintf("%d_%s", userId, filename)

@@ -29,7 +29,9 @@ func Feed(c *gin.Context) {
 	if !flag {
 		token = "-"
 	}
+
 	videos, err = service.VideoListWithToken(token, latestTime)
+
 	fmt.Println("controller ----------", videos)
 	if err == nil {
 		c.JSON(http.StatusOK, FeedResponse{
@@ -38,7 +40,7 @@ func Feed(c *gin.Context) {
 			NextTime:  time.Now().Unix(),
 		})
 	} else {
-		c.JSON(http.StatusOK, UserLoginResponse{
+		c.JSON(http.StatusOK, FeedResponse{
 			Response: Response{StatusCode: 1, StatusMsg: err.Error()},
 		})
 	}

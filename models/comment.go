@@ -9,9 +9,9 @@ import (
 
 type Comment struct {
 	Id         int    `json:"id,omitempty"`
-	userId     int    `json:"user_id"`
+	UserId     int    `json:"user_id"`
 	User       User   `json:"user"`
-	videoId    int    `json:"video_id"`
+	VideoId    int    `json:"video_id"`
 	Content    string `json:"content,omitempty"`
 	CreateDate string `json:"create_date,omitempty"`
 }
