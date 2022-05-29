@@ -29,22 +29,23 @@ func NewRelationDaoInstance() *RelationDao {
 	return relationDao
 }
 
+//关注
 func (*RelationDao) CreateRelation(relation Relation) error {
 	if err := db.Create(&relation).Error; err != nil {
-		util.Logger.Error("insert relation err:" + err.Error())
 		return err
 	}
 	return nil
 }
 
+//取关
 func (*RelationDao) DeleteRelation(relation Relation) error {
 	if err := db.Where("user_id = ? and to_user_id = ?", relation.UserId, relation.ToUserId).Delete(&relation).Error; err != nil {
-		util.Logger.Error("delete relation err:" + err.Error())
 		return err
 	}
 	return nil
 }
 
+//关注列表
 func (*RelationDao) QueryRelationByUserId(userId int) []int {
 	ids := make([]int, 0)
 	err := db.Table("relation").Select("to_user_id").Where("user_id = ?", userId).Find(&ids).Error
@@ -58,6 +59,7 @@ func (*RelationDao) QueryRelationByUserId(userId int) []int {
 	return ids
 }
 
+//关注人数
 func (*RelationDao) QueryRelationCountByUserId(userId int) (int, error) {
 	var count int64
 	err := db.Table("relation").Where("user_id = ?", userId).Count(&count).Error
@@ -67,6 +69,7 @@ func (*RelationDao) QueryRelationCountByUserId(userId int) (int, error) {
 	return int(count), nil
 }
 
+//粉丝列表
 func (*RelationDao) QueryRelationByToUserId(userId int) []int {
 	ids := make([]int, 0)
 	err := db.Table("relation").Select("user_id").Where("to_user_id = ?", userId).Find(&ids).Error
@@ -80,6 +83,7 @@ func (*RelationDao) QueryRelationByToUserId(userId int) []int {
 	return ids
 }
 
+//粉丝人数
 func (*RelationDao) QueryRelationCountByToUserId(userId int) (int, error) {
 	var count int64
 	err := db.Table("relation").Where("to_user_id = ?", userId).Count(&count).Error
@@ -89,15 +93,12 @@ func (*RelationDao) QueryRelationCountByToUserId(userId int) (int, error) {
 	return int(count), nil
 }
 
-func (*RelationDao) QueryRelation(userId int, toUserId int) (Relation, error) {
-	var relation Relation
-	err := db.Where("user_id = ? and to_user_id = ?", userId, toUserId).Find(&relation).Error
-	if err == gorm.ErrRecordNotFound {
-		return relation, err
+//关注状态 已关注--true 未关注--false
+func (*RelationDao) QueryRelation(userId int, toUserId int) bool {
+	var count int64
+	db.Model(Relation{}).Where("user_id = ? and to_user_id = ?", userId, toUserId).Count(&count)
+	if count > 0 {
+		return true
 	}
-	if err != nil {
-		util.Logger.Error("find relations by user_id error:" + err.Error())
-		return relation, err
-	}
-	return relation, nil
+	return false
 }

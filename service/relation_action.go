@@ -56,17 +56,16 @@ func (f *RelationActionFlow) checkParam() error {
 
 func (f *RelationActionFlow) prepareData() error {
 	relationDao := models.NewRelationDaoInstance()
+	relation := models.Relation{
+		UserId:   f.UserId,
+		ToUserId: f.ToUserId,
+	}
 	if f.ActionType == "1" {
-		relation := models.Relation{
-			UserId:   f.UserId,
-			ToUserId: f.ToUserId,
-		}
 		if err := relationDao.CreateRelation(relation); err != nil {
 			return err
 		}
 	} else if f.ActionType == "2" {
-		relation, err := relationDao.QueryRelation(f.UserId, f.ToUserId)
-		if err != nil {
+		if !relationDao.QueryRelation(f.UserId, f.ToUserId) {
 			return errors.New("未关注")
 		}
 		if err := relationDao.DeleteRelation(relation); err != nil {

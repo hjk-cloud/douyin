@@ -52,10 +52,13 @@ func (f *FollowListFlow) prepareData() error {
 }
 
 func (f *FollowListFlow) packData() error {
-	favoriteDao := models.NewRelationDaoInstance()
+	relationDao := models.NewRelationDaoInstance()
 	userDao := models.NewUserDaoInstance()
 
-	toUserIds := favoriteDao.QueryRelationByUserId(f.UserId)
+	toUserIds := relationDao.QueryRelationByUserId(f.UserId)
 	f.Users = userDao.MQueryUserById(toUserIds)
+	for i := range f.Users {
+		f.Users[i].IsFollow = relationDao.QueryRelation(f.UserId, toUserIds[i])
+	}
 	return nil
 }

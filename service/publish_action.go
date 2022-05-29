@@ -8,7 +8,6 @@ import (
 	"github.com/hjk-cloud/douyin/util/jwt"
 	"mime/multipart"
 	"path/filepath"
-	"time"
 )
 
 type PublishFlow struct {
@@ -69,11 +68,10 @@ func (f *PublishFlow) prepareData() error {
 
 func (f *PublishFlow) packData() error {
 	f.Video = &models.Video{
-		AuthorId:  f.AuthorId,
-		PlayUrl:   f.PlayUrl,
-		CoverUrl:  f.CoverUrl,
-		Title:     f.Title,
-		CreatedAt: time.Now(),
+		AuthorId: f.AuthorId,
+		PlayUrl:  f.PlayUrl,
+		CoverUrl: f.CoverUrl,
+		Title:    f.Title,
 	}
 	fmt.Println("packData----Video", f.Video)
 	videoDao := models.NewVideoDaoInstance()

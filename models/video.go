@@ -4,19 +4,18 @@ import (
 	"github.com/hjk-cloud/douyin/util"
 	"gorm.io/gorm"
 	"sync"
-	"time"
 )
 
 type Video struct {
-	Id            int       `gorm:"column:id;type:int" json:"id,omitempty"`
-	AuthorId      int       `gorm:"column:author_id" json:"author_id,omitempty"`
-	Author        User      `json:"author"`
-	PlayUrl       string    `gorm:"column:play_url;type:varchar(255)" json:"play_url"`
-	CoverUrl      string    `gorm:"column:cover_url;type:varchar(255)" json:"cover_url"`
-	FavoriteCount int       `json:"favorite_count,omitempty"`
-	CommentCount  int       `json:"comment_count,omitempty"`
-	Title         string    `json:"title,omitempty"`
-	CreatedAt     time.Time `json:"-"`
+	Id            int    `gorm:"column:id;type:int" json:"id,omitempty"`
+	AuthorId      int    `gorm:"column:author_id" json:"author_id,omitempty"`
+	Author        User   `json:"author"`
+	PlayUrl       string `gorm:"column:play_url;type:varchar(255)" json:"play_url"`
+	CoverUrl      string `gorm:"column:cover_url;type:varchar(255)" json:"cover_url"`
+	FavoriteCount int    `json:"favorite_count,omitempty"`
+	CommentCount  int    `json:"comment_count,omitempty"`
+	Title         string `json:"title,omitempty"`
+	IsFavorite    bool   `json:"is_favorite"`
 }
 
 func (Video) TableName() string {
