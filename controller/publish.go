@@ -5,6 +5,7 @@ import (
 	"github.com/hjk-cloud/douyin/models"
 	"github.com/hjk-cloud/douyin/service"
 	"net/http"
+	"strconv"
 )
 
 type VideoListResponse struct {
@@ -71,12 +72,22 @@ func Publish(c *gin.Context) {
 }
 
 func PublishList(c *gin.Context) {
-	//token := c.Query("token")
-	//videos := models.NewVideoDaoInstance().MQueryVideoByToken(token)
-	//c.JSON(http.StatusOK, VideoListResponse{
-	//	Response: Response{
-	//		StatusCode: 0,
-	//	},
-	//	VideoList: videos,
-	//})
+	token := c.Query("token")
+	userIdString := c.Query("user_id")
+	userId, _ := strconv.Atoi(userIdString)
+
+	videos, err := service.PublishList(token, userId)
+
+	if err != nil {
+		c.JSON(http.StatusOK, VideoListResponse{
+			Response: Response{
+				StatusCode: 0,
+			},
+			VideoList: videos,
+		})
+	} else {
+		c.JSON(http.StatusOK, VideoListResponse{
+			Response: Response{StatusCode: 1, StatusMsg: err.Error()},
+		})
+	}
 }

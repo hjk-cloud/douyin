@@ -1,1 +1,61 @@
 package service
+
+import (
+	"fmt"
+	"github.com/hjk-cloud/douyin/models"
+	"github.com/hjk-cloud/douyin/util/jwt"
+)
+
+type PublishListFlow struct {
+	Token  string
+	UserId int
+	Video  []models.Video
+}
+
+func PublishList(token string, userId int) ([]models.Video, error) {
+	return NewPublishListWithTokenFlow(token, userId).Do()
+}
+
+func NewPublishListWithTokenFlow(token string, userId int) *PublishListFlow {
+	return &PublishListFlow{
+		Token:  token,
+		UserId: userId,
+	}
+}
+
+func (f *PublishListFlow) Do() ([]models.Video, error) {
+	if err := f.checkParam(); err != nil {
+		return nil, err
+	}
+	if err := f.prepareData(); err != nil {
+		return nil, err
+	}
+	if err := f.packData(); err != nil {
+		return nil, err
+	}
+	return f.Video, nil
+}
+
+func (f *PublishListFlow) checkParam() error {
+	fmt.Println("service---Token----", f.Token)
+	fmt.Println("service---UserId----", f.UserId)
+	_, err := jwt.JWTAuth(f.Token)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//TODO 通过token获取userId,通过userId获取video_id
+func (f *PublishListFlow) prepareData() error {
+
+	return nil
+}
+
+func (f *PublishListFlow) packData() error {
+	videoDao := models.NewVideoDaoInstance()
+
+	authorIds := videoDao.QueryPublishVideoList(f.UserId)
+	f.Video = videoDao.MQueryVideoByAuthorIds(authorIds)
+	return nil
+}

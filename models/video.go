@@ -88,6 +88,33 @@ func (*VideoDao) MQueryVideoByIds(videoIds []int) error {
 	return nil
 }
 
+func (*VideoDao) MQueryVideoByAuthorIds(authorIds []int) []Video {
+	var videos []Video
+	err := db.Where("id in ?", authorIds).Find(&videos).Error
+
+	if err == gorm.ErrRecordNotFound {
+		return nil
+	}
+	if err != nil {
+		util.Logger.Error("find videos by ids error:" + err.Error())
+		return nil
+	}
+	return videos
+}
+
+func (*VideoDao) QueryPublishVideoList(userId int) []int {
+	ids := make([]int, 0)
+	err := db.Table("video").Select("id").Where("author_id = ?", userId).Find(&ids).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil
+	}
+	if err != nil {
+		util.Logger.Error("find videos by user_id error:" + err.Error())
+		return nil
+	}
+	return ids
+}
+
 func (*VideoDao) PublishVideo(video *Video) error {
 	err := db.Select("author_id", "play_url", "cover_url", "title", "created_at").
 		Create(&video).Error
