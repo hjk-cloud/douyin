@@ -1,6 +1,9 @@
 package service
 
-import "github.com/hjk-cloud/douyin/models"
+import (
+	"github.com/hjk-cloud/douyin/models"
+	"github.com/hjk-cloud/douyin/util/jwt"
+)
 
 type FavoriteActionFlow struct {
 	UserId     int
@@ -40,13 +43,17 @@ func (f *FavoriteActionFlow) checkParam() error {
 	return nil
 }
 
+//前端传来的userId为0
 func (f *FavoriteActionFlow) prepareData() error {
 	favoriteDao := models.NewFavoriteDaoInstance()
+	userId, err := jwt.JWTAuth(f.Token)
+	if err != nil {
+		return err
+	}
 	favorite := models.Favorite{
-		UserId:  f.UserId,
+		UserId:  userId,
 		VideoId: f.VideoId,
 	}
-	var err error
 
 	if f.ActionType == "1" {
 		err = favoriteDao.CreateFavorite(favorite)
