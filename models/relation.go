@@ -94,7 +94,7 @@ func (*RelationDao) QueryRelationCountByToUserId(userId int) (int, error) {
 }
 
 //关注状态 已关注--true 未关注--false
-func (*RelationDao) QueryRelation(userId int, toUserId int) bool {
+func (*RelationDao) QueryRelationState(userId int, toUserId int) bool {
 	var count int64
 	db.Model(Relation{}).Where("user_id = ? and to_user_id = ?", userId, toUserId).Count(&count)
 	if count > 0 {

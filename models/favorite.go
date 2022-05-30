@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"github.com/hjk-cloud/douyin/util"
 	"gorm.io/gorm"
 	"sync"
@@ -30,29 +29,23 @@ func NewFavoriteDaoInstance() *FavoriteDao {
 	return favoriteDao
 }
 
+//点赞
 func (*FavoriteDao) CreateFavorite(favorite Favorite) error {
 	if err := db.Table("favorite").Create(&favorite).Error; err != nil {
-		util.Logger.Error("insert favorite err:" + err.Error())
 		return err
 	}
-	fmt.Println("Favorite add")
 	return nil
-	//err := db.Table("favorite").Create(&favorite).Error
-	//if err != nil {
-	//	return errors.New("增加点赞失败")
-	//}
-	//fmt.Println("Favorite add")
-	//return nil
 }
 
+//取消点赞
 func (*FavoriteDao) DeleteFavorite(favorite Favorite) error {
 	if err := db.Table("favorite").Where("user_id = ? and video_id = ?", favorite.UserId, favorite.VideoId).Delete(&favorite).Error; err != nil {
-		util.Logger.Error("delete favorite err:" + err.Error())
 		return err
 	}
 	return nil
 }
 
+//用户点赞数
 func (*FavoriteDao) QueryFavoriteCount(videoId int) (int, error) {
 	var count int64
 	err := db.Table("favorite").Where("video_id = ?", videoId).Count(&count).Error
@@ -66,6 +59,7 @@ func (*FavoriteDao) QueryFavoriteCount(videoId int) (int, error) {
 	return int(count), nil
 }
 
+//根据userId查找已点赞视频id列表
 func (*FavoriteDao) QueryFavoriteVideo(userId int) []int {
 	videoIds := make([]int, 0)
 	err := db.Table("favorite").Select("video_id").Where("user_id = ?", userId).Find(&videoIds).Error
@@ -77,4 +71,21 @@ func (*FavoriteDao) QueryFavoriteVideo(userId int) []int {
 		return nil
 	}
 	return videoIds
+}
+
+//点赞状态 已点赞--true 未点赞--false
+func (*FavoriteDao) QueryFavoriteState(userId, videoId int) bool {
+	var count int64
+	db.Table("favorite").Model(Favorite{}).Where("user_id = ? and video_id = ?", userId, videoId).Count(&count)
+	if count > 0 {
+		return true
+	}
+	return false
+}
+
+//根据视频id查询视频的点赞数
+func (*FavoriteDao) QueryVideoFavoriteCount(videoId int) int {
+	var count int64
+	db.Table("favorite").Model(Favorite{}).Where("video_id = ?", videoId).Count(&count)
+	return int(count)
 }

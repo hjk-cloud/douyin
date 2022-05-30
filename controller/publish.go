@@ -79,7 +79,7 @@ func PublishList(c *gin.Context) {
 
 	videos, err := service.PublishList(token, userId)
 
-	if err != nil {
+	if err == nil {
 		c.JSON(http.StatusOK, VideoListResponse{
 			Response: Response{
 				StatusCode: 0,

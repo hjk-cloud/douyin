@@ -71,20 +71,19 @@ func (*VideoDao) MQueryVideoByToken(token string, videos []*Video) error {
 	return nil
 }
 
-func (*VideoDao) MQueryVideoByIds(videoIds []int) error {
+func (*VideoDao) MQueryVideoByIds(videoIds []int) []*Video {
 	var videos []*Video
 	err := db.Where("id in ?", videoIds).Find(&videos).Error
 	if err == gorm.ErrRecordNotFound {
-		return err
+		return nil
 	}
 	if err != nil {
-		util.Logger.Error("find videos by ids error:" + err.Error())
-		return err
+		return nil
 	}
 	for i := range videos {
 		NewVideoDaoInstance().BuildAuthor(videos[i])
 	}
-	return nil
+	return videos
 }
 
 //王硕-------------------通过视频id查找并返回对应的所有视频

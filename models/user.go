@@ -34,6 +34,7 @@ func NewUserDaoInstance() *UserDao {
 	return userDao
 }
 
+//注册
 func (*UserDao) Register(user *User) error {
 	err := db.Select("name", "password").Create(&user).Error
 	if err != nil {
@@ -42,6 +43,8 @@ func (*UserDao) Register(user *User) error {
 	return nil
 }
 
+//根据userId查找用户
+//上层调用：视频填充作者、用户个人主页、token授权
 func (*UserDao) QueryUserById(id int) (*User, error) {
 	var user User
 	err := db.Where("id = ?", id).Take(&user).Error
@@ -54,6 +57,8 @@ func (*UserDao) QueryUserById(id int) (*User, error) {
 	return &user, nil
 }
 
+//根据id列表查找用户列表
+//上层调用：关注列表、粉丝列表
 func (*UserDao) MQueryUserById(ids []int) []User {
 	var users []User
 	err := db.Where("id in ?", ids).Find(&users).Error
@@ -66,6 +71,7 @@ func (*UserDao) MQueryUserById(ids []int) []User {
 	return users
 }
 
+//注册时根据用户名判重
 func (*UserDao) QueryUserByName(name string) (int, error) {
 	var count int64
 	err := db.Where("name = ?", name).Count(&count).Error
@@ -75,6 +81,7 @@ func (*UserDao) QueryUserByName(name string) (int, error) {
 	return int(count), nil
 }
 
+//登录
 func (*UserDao) Login(name string, password string) (int, error) {
 	var user User
 	err := db.Where("name = ? AND password = ?", name, password).Take(&user).Error
