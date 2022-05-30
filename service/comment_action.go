@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"github.com/hjk-cloud/douyin/models"
 	"github.com/hjk-cloud/douyin/util/jwt"
 	"time"
@@ -92,6 +91,6 @@ func (f *CommentActionFlow) packData() error {
 		}
 	}
 	f.Comment = comment
-	fmt.Println(f.Comment)
+	//fmt.Println(f.Comment)
 	return nil
 }
