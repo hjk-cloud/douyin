@@ -61,6 +61,7 @@ func (f *FavoriteListFlow) packData() error {
 		videoDao.BuildAuthor(f.Videos[i])
 		f.Videos[i].Author.IsFollow = relationDao.QueryRelationState(f.UserId, f.Videos[i].AuthorId)
 		f.Videos[i].IsFavorite = favoriteDao.QueryFavoriteState(f.UserId, f.Videos[i].Id)
+		f.Videos[i].FavoriteCount = favoriteDao.QueryVideoFavoriteCount(f.Videos[i].Id)
 		//fmt.Println("service----Videos[i]---", f.Videos[i])
 	}
 

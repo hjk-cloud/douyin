@@ -104,7 +104,7 @@ func (*VideoDao) MQueryVideoByAuthorIds(videoIds []int) []Video {
 //王硕------------------------通过用户id查找该id下发布的所有视频的id
 func (*VideoDao) QueryPublishVideoList(UserId int) []int {
 	ids := make([]int, 0)
-	err := db.Table("video").Select("author_id").Where("id = ?", UserId).Find(&ids).Error
+	err := db.Table("video").Select("id").Where("author_id = ?", UserId).Find(&ids).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil
 	}
