@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"github.com/hjk-cloud/douyin/models"
 	"github.com/hjk-cloud/douyin/util/jwt"
 )
@@ -37,8 +36,8 @@ func (f *FollowerListFlow) Do() ([]models.User, error) {
 }
 
 func (f *FollowerListFlow) checkParam() error {
-	fmt.Println("service---Token----", f.Token)
-	fmt.Println("service---UserId----", f.UserId)
+	//fmt.Println("service---Token----", f.Token)
+	//fmt.Println("service---UserId----", f.UserId)
 	_, err := jwt.JWTAuth(f.Token)
 	if err != nil {
 		return err

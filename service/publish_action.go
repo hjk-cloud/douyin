@@ -52,7 +52,7 @@ func (f *PublishFlow) prepareData() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("prepareData----UserId", userId)
+	//fmt.Println("prepareData----UserId", userId)
 	f.AuthorId = userId
 	filename := filepath.Base(f.Data.Filename)
 	finalName := fmt.Sprintf("%d_%s", userId, filename)
@@ -73,7 +73,7 @@ func (f *PublishFlow) packData() error {
 		CoverUrl: f.CoverUrl,
 		Title:    f.Title,
 	}
-	fmt.Println("packData----Video", f.Video)
+	//fmt.Println("packData----Video", f.Video)
 	videoDao := models.NewVideoDaoInstance()
 	if err := videoDao.PublishVideo(f.Video); err != nil {
 		return err

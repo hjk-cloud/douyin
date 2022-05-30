@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"github.com/hjk-cloud/douyin/models"
 	"github.com/hjk-cloud/douyin/util/jwt"
 )
@@ -41,10 +40,10 @@ func (f *RelationActionFlow) Do() error {
 }
 
 func (f *RelationActionFlow) checkParam() error {
-	fmt.Println("service---Token----", f.Token)
-	fmt.Println("service---UserId----", f.UserId)
-	fmt.Println("service---ToUserId----", f.ToUserId)
-	fmt.Println("service---ActionType----", f.ActionType)
+	//fmt.Println("service---Token----", f.Token)
+	//fmt.Println("service---UserId----", f.UserId)
+	//fmt.Println("service---ToUserId----", f.ToUserId)
+	//fmt.Println("service---ActionType----", f.ActionType)
 	userId, err := jwt.JWTAuth(f.Token)
 	if err != nil {
 		return err
