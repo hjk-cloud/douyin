@@ -50,6 +50,9 @@ func (f *RelationActionFlow) checkParam() error {
 	}
 	//从前端获取到的user_id一直为0，目前解决方法是根据token获取当前用户user_id
 	f.UserId = userId
+	if f.UserId == f.ToUserId {
+		return errors.New("咋地还想关注自己啊")
+	}
 	return nil
 }
 
