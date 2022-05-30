@@ -47,6 +47,7 @@ func (f *VideoListFlow) packData() error {
 	videoDao := models.NewVideoDaoInstance()
 	relationDao := models.NewRelationDaoInstance()
 	favoriteDao := models.NewFavoriteDaoInstance()
+	commentDao := models.NewCommentDaoInstance()
 
 	videoDao.MQueryVideo(&f.Videos)
 	for i := range f.Videos {
@@ -55,6 +56,7 @@ func (f *VideoListFlow) packData() error {
 		f.Videos[i].IsFavorite = favoriteDao.QueryFavoriteState(f.UserId, f.Videos[i].Id)
 		//fmt.Println("service--",f.UserId,"----",f.Videos[i].Id,"--isFavorite---", f.Videos[i].IsFavorite)
 		f.Videos[i].FavoriteCount = favoriteDao.QueryVideoFavoriteCount(f.Videos[i].Id)
+		f.Videos[i].CommentCount = commentDao.QueryCommentCount(f.Videos[i].Id)
 	}
 	return nil
 }

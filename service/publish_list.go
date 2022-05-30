@@ -45,7 +45,6 @@ func (f *PublishListFlow) checkParam() error {
 	return nil
 }
 
-//TODO 通过token获取authorId,通过authorId获取video_id
 func (f *PublishListFlow) prepareData() error {
 	userId, err := jwt.JWTAuth(f.Token)
 	if err != nil {

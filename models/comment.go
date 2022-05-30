@@ -60,3 +60,10 @@ func (*CommentDao) DeleteComment(comment *Comment) error {
 	}
 	return nil
 }
+
+//根据videoId查询评论数
+func (*CommentDao) QueryCommentCount(videoId int) int {
+	var count int64
+	db.Model(Comment{}).Where("video_id = ?", videoId).Count(&count)
+	return int(count)
+}
