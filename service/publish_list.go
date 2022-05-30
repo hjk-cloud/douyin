@@ -9,7 +9,7 @@ import (
 type PublishListFlow struct {
 	Token  string
 	UserId int
-	Video  []models.Video
+	Videos []models.Video
 }
 
 func PublishList(token string, userId int) ([]models.Video, error) {
@@ -33,12 +33,12 @@ func (f *PublishListFlow) Do() ([]models.Video, error) {
 	if err := f.packData(); err != nil {
 		return nil, err
 	}
-	return f.Video, nil
+	return f.Videos, nil
 }
 
 func (f *PublishListFlow) checkParam() error {
 	fmt.Println("service---Token----", f.Token)
-	fmt.Println("service---UserId----", f.UserId)
+	fmt.Println("service---AuthorId----", f.UserId)
 	_, err := jwt.JWTAuth(f.Token)
 	if err != nil {
 		return err
@@ -46,16 +46,24 @@ func (f *PublishListFlow) checkParam() error {
 	return nil
 }
 
-//TODO 通过token获取userId,通过userId获取video_id
+//TODO 通过token获取authorId,通过authorId获取video_id
 func (f *PublishListFlow) prepareData() error {
-
+	userId, err := jwt.JWTAuth(f.Token)
+	if err != nil {
+		return err
+	}
+	f.UserId = userId
 	return nil
 }
 
 func (f *PublishListFlow) packData() error {
 	videoDao := models.NewVideoDaoInstance()
 
-	authorIds := videoDao.QueryPublishVideoList(f.UserId)
-	f.Video = videoDao.MQueryVideoByAuthorIds(authorIds)
+	videos := videoDao.QueryPublishVideoList(f.UserId)
+	f.Videos = videoDao.MQueryVideoByAuthorIds(videos)
+	for i := range f.Videos {
+		//f.Videos[i].AuthorId = videoDao.QueryVideoAuthorId(videos[i])
+		fmt.Println("videos", videos, "f.Videos", f.Videos, "f~~~", f.Videos[i].AuthorId)
+	}
 	return nil
 }

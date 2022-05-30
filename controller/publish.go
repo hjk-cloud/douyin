@@ -71,9 +71,10 @@ func Publish(c *gin.Context) {
 	//}
 }
 
+//王硕-------------------------------------这个是模仿其他的List写的，通过token获取视频列表
 func PublishList(c *gin.Context) {
 	token := c.Query("token")
-	userIdString := c.Query("user_id")
+	userIdString := c.Query("author_id")
 	userId, _ := strconv.Atoi(userIdString)
 
 	videos, err := service.PublishList(token, userId)

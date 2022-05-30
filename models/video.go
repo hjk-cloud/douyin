@@ -87,9 +87,10 @@ func (*VideoDao) MQueryVideoByIds(videoIds []int) error {
 	return nil
 }
 
-func (*VideoDao) MQueryVideoByAuthorIds(authorIds []int) []Video {
+//王硕-------------------通过视频id查找并返回对应的所有视频
+func (*VideoDao) MQueryVideoByAuthorIds(videoIds []int) []Video {
 	var videos []Video
-	err := db.Where("id in ?", authorIds).Find(&videos).Error
+	err := db.Where("id in ?", videoIds).Find(&videos).Error
 
 	if err == gorm.ErrRecordNotFound {
 		return nil
@@ -101,14 +102,15 @@ func (*VideoDao) MQueryVideoByAuthorIds(authorIds []int) []Video {
 	return videos
 }
 
-func (*VideoDao) QueryPublishVideoList(userId int) []int {
+//王硕------------------------通过用户id查找该id下发布的所有视频的id
+func (*VideoDao) QueryPublishVideoList(UserId int) []int {
 	ids := make([]int, 0)
-	err := db.Table("video").Select("id").Where("author_id = ?", userId).Find(&ids).Error
+	err := db.Table("video").Select("author_id").Where("id = ?", UserId).Find(&ids).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil
 	}
 	if err != nil {
-		util.Logger.Error("find videos by user_id error:" + err.Error())
+		util.Logger.Error("find videoIds by author_id error:" + err.Error())
 		return nil
 	}
 	return ids
