@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"github.com/hjk-cloud/douyin/models"
 	"github.com/hjk-cloud/douyin/util/jwt"
 )
@@ -37,8 +36,8 @@ func (f *FavoriteListFlow) Do() ([]*models.Video, error) {
 }
 
 func (f *FavoriteListFlow) checkParam() error {
-	fmt.Println("favoriteService---Token----", f.Token)
-	fmt.Println("favoriteService---UserId----", f.UserId)
+	//fmt.Println("favoriteService---Token----", f.Token)
+	//fmt.Println("favoriteService---UserId----", f.UserId)
 	if _, err := jwt.JWTAuth(f.Token); err != nil {
 		return err
 	}
@@ -56,14 +55,13 @@ func (f *FavoriteListFlow) packData() error {
 	relationDao := models.NewRelationDaoInstance()
 
 	videoIds := favoriteDao.QueryFavoriteVideo(f.UserId)
-	fmt.Println("service----videoIds---", videoIds)
 	f.Videos = videoDao.MQueryVideoByIds(videoIds)
 
 	for i := range f.Videos {
 		videoDao.BuildAuthor(f.Videos[i])
 		f.Videos[i].Author.IsFollow = relationDao.QueryRelationState(f.UserId, f.Videos[i].AuthorId)
 		f.Videos[i].IsFavorite = favoriteDao.QueryFavoriteState(f.UserId, f.Videos[i].Id)
-		fmt.Println("service----Videos[i]---", f.Videos[i])
+		//fmt.Println("service----Videos[i]---", f.Videos[i])
 	}
 
 	return nil

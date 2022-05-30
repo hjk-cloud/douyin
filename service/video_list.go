@@ -46,11 +46,15 @@ func (f *VideoListFlow) prepareData() error {
 func (f *VideoListFlow) packData() error {
 	videoDao := models.NewVideoDaoInstance()
 	relationDao := models.NewRelationDaoInstance()
+	favoriteDao := models.NewFavoriteDaoInstance()
 
 	videoDao.MQueryVideo(&f.Videos)
 	for i := range f.Videos {
 		videoDao.BuildAuthor(f.Videos[i])
 		f.Videos[i].Author.IsFollow = relationDao.QueryRelationState(f.UserId, f.Videos[i].AuthorId)
+		f.Videos[i].IsFavorite = favoriteDao.QueryFavoriteState(f.UserId, f.Videos[i].Id)
+		//fmt.Println("service--",f.UserId,"----",f.Videos[i].Id,"--isFavorite---", f.Videos[i].IsFavorite)
+		f.Videos[i].FavoriteCount = favoriteDao.QueryVideoFavoriteCount(f.Videos[i].Id)
 	}
 	return nil
 }

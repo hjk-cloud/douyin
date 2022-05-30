@@ -6,20 +6,20 @@ import (
 	"github.com/hjk-cloud/douyin/util/jwt"
 )
 
-func UserRegister(username string, password string) (*models.User, error) {
-	return NewUserRegisterFlow(username, password).Do()
-}
-
-func NewUserRegisterFlow(username string, password string) *UserRegisterFlow {
-	return &UserRegisterFlow{Username: username, Password: password}
-}
-
 type UserRegisterFlow struct {
 	Username string
 	Password string
 	User     *models.User
 	UserId   int
 	Token    string
+}
+
+func UserRegister(username string, password string) (*models.User, error) {
+	return NewUserRegisterFlow(username, password).Do()
+}
+
+func NewUserRegisterFlow(username string, password string) *UserRegisterFlow {
+	return &UserRegisterFlow{Username: username, Password: password}
 }
 
 func (f *UserRegisterFlow) Do() (*models.User, error) {
