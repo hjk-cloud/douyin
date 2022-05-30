@@ -50,7 +50,7 @@ func (f *VideoListFlow) packData() error {
 	videoDao.MQueryVideo(&f.Videos)
 	for i := range f.Videos {
 		videoDao.BuildAuthor(f.Videos[i])
-		f.Videos[i].Author.IsFollow = relationDao.QueryRelation(f.UserId, f.Videos[i].AuthorId)
+		f.Videos[i].Author.IsFollow = relationDao.QueryRelationState(f.UserId, f.Videos[i].AuthorId)
 	}
 	return nil
 }

@@ -58,7 +58,7 @@ func (f *FollowerListFlow) packData() error {
 	userIds := relationDao.QueryRelationByToUserId(f.UserId)
 	f.Users = userDao.MQueryUserById(userIds)
 	for i := range f.Users {
-		f.Users[i].IsFollow = relationDao.QueryRelation(f.UserId, userIds[i])
+		f.Users[i].IsFollow = relationDao.QueryRelationState(f.UserId, userIds[i])
 	}
 	return nil
 }

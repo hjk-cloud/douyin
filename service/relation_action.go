@@ -65,7 +65,7 @@ func (f *RelationActionFlow) prepareData() error {
 			return err
 		}
 	} else if f.ActionType == "2" {
-		if !relationDao.QueryRelation(f.UserId, f.ToUserId) {
+		if !relationDao.QueryRelationState(f.UserId, f.ToUserId) {
 			return errors.New("未关注")
 		}
 		if err := relationDao.DeleteRelation(relation); err != nil {

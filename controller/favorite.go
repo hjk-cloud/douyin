@@ -3,8 +3,15 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/hjk-cloud/douyin/models"
+	"github.com/hjk-cloud/douyin/service"
+	"net/http"
 	"strconv"
 )
+
+type FavoriteVideoListResponse struct {
+	Response
+	VideoList []*models.Video `json:"video_list"`
+}
 
 func FavoriteAction(c *gin.Context) {
 	//token := c.Query("token")
@@ -34,19 +41,19 @@ func FavoriteAction(c *gin.Context) {
 	//		c.JSON(http.StatusOK, Response{StatusCode: 1, StatusMsg: "operate fail..."})
 	//	}
 	//}
-	//todo favorite_count +1 / -1
 }
 
 func FavoriteList(c *gin.Context) {
-	//token := c.Query("token")
+	token := c.Query("token")
 	userIdString := c.Query("user_id")
 	userId, _ := strconv.Atoi(userIdString)
-	videoIds := models.NewFavoriteDaoInstance().QueryFavoriteVideo(userId)
-	models.NewVideoDaoInstance().MQueryVideoByIds(videoIds)
-	//c.JSON(http.StatusOK, VideoListResponse{
-	//	Response: Response{
-	//		StatusCode: 0,
-	//	},
-	//	VideoList: videos,
-	//})
+
+	videos, _ := service.FavoriteList(token, userId)
+
+	c.JSON(http.StatusOK, FavoriteVideoListResponse{
+		Response: Response{
+			StatusCode: 0,
+		},
+		VideoList: videos,
+	})
 }
