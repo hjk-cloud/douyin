@@ -44,7 +44,7 @@ func (*UserDao) Register(user *User) error {
 }
 
 //根据userId查找用户
-//上层调用：视频填充作者、用户个人主页、token授权
+//上层调用：视频填充作者、用户个人主页、token授权、评论用户填充
 func (*UserDao) QueryUserById(id int) (*User, error) {
 	var user User
 	err := db.Where("id = ?", id).Take(&user).Error

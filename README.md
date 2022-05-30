@@ -17,6 +17,8 @@ https://www.apifox.cn/apidoc/shared-8cc50618-0da6-4d5e-a398-76f3b8f766c5/api-183
 关注、取关操作、关注列表、粉丝列表
 ## favorite模块
 点赞、取消操作、喜欢列表
+## comment模块
+评论列表、添加评论
 
 
 # 待优化
@@ -30,6 +32,9 @@ video封面url未获取
 前端请求参数中latest_time属性未使用
 
 next_time属性未使用
+
+## comment模块
+没找到怎么删评论
 
 -----------------------------------
 

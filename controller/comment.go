@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/hjk-cloud/douyin/models"
+	"github.com/hjk-cloud/douyin/service"
 	"net/http"
 	"strconv"
 )
@@ -15,40 +15,51 @@ type CommentListResponse struct {
 
 type CommentActionResponse struct {
 	Response
-	Comment models.Comment `json:"comment,omitempty"`
+	Comment *models.Comment `json:"comment,omitempty"`
 }
 
-// CommentAction no practical effect, just check if token is valid
 func CommentAction(c *gin.Context) {
-	//token := c.Query("token")
-	//actionType := c.Query("action_type")
-	//
-	//if user, err := models.NewUserDaoInstance().QueryUserByToken(token); err == nil {
-	//	if actionType == "1" {
-	//		text := c.Query("comment_text")
-	//		c.JSON(http.StatusOK, CommentActionResponse{Response: Response{StatusCode: 0},
-	//			Comment: models.Comment{
-	//				Id:         1,
-	//				User:       *user,
-	//				Content:    text,
-	//				CreateDate: "05-01",
-	//			}})
-	//		return
-	//	}
-	//	c.JSON(http.StatusOK, Response{StatusCode: 0})
-	//} else {
-	//	c.JSON(http.StatusOK, Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
-	//}
+	userIdString := c.Query("user_id")
+	userId, _ := strconv.Atoi(userIdString)
+	token := c.Query("token")
+	videoIdString := c.Query("video_id")
+	videoId, _ := strconv.Atoi(videoIdString)
+	actionType := c.Query("action_type") //1-发布评论，2-删除评论
+	commentText := c.Query("comment_text")
+	commentIdString := c.Query("comment_id")
+	commentId, _ := strconv.Atoi(commentIdString)
+
+	comment, err := service.CommentAction(userId, token, videoId, actionType, commentText, commentId)
+
+	if err == nil {
+		c.JSON(http.StatusOK, CommentActionResponse{
+			Response: Response{StatusCode: 0},
+			Comment:  comment,
+		})
+	} else {
+		c.JSON(http.StatusOK, Response{
+			StatusCode: 1,
+			StatusMsg:  err.Error(),
+		})
+	}
 }
 
 func CommentList(c *gin.Context) {
-	//token := c.Query("token")
+	token := c.Query("token")
 	videoIdString := c.Query("video_id")
 	videoId, _ := strconv.Atoi(videoIdString)
-	fmt.Println("videoId ----------", videoId)
-	comments := models.NewCommentDaoInstance().MQueryCommentById(videoId)
-	c.JSON(http.StatusOK, CommentListResponse{
-		Response:    Response{StatusCode: 0},
-		CommentList: comments,
-	})
+
+	comments, err := service.CommentList(token, videoId)
+
+	if err == nil {
+		c.JSON(http.StatusOK, CommentListResponse{
+			Response:    Response{StatusCode: 0},
+			CommentList: comments,
+		})
+	} else {
+		c.JSON(http.StatusOK, CommentListResponse{
+			Response:    Response{StatusCode: 0, StatusMsg: err.Error()},
+			CommentList: comments,
+		})
+	}
 }

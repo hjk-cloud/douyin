@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"github.com/hjk-cloud/douyin/models"
 	"github.com/hjk-cloud/douyin/util/jwt"
 )
@@ -57,7 +56,6 @@ func (f *CommentListFlow) packData() error {
 	userDao := models.NewUserDaoInstance()
 
 	f.Comments = commentDao.MQueryCommentByVideoId(f.VideoId)
-	fmt.Println("service---comment---", f.Comments)
 	for i := range f.Comments {
 		user, _ := userDao.QueryUserById(f.Comments[i].UserId)
 		f.Comments[i].User = *user

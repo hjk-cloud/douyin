@@ -1,8 +1,6 @@
 package models
 
 import (
-	"fmt"
-	"github.com/hjk-cloud/douyin/util"
 	"gorm.io/gorm"
 	"sync"
 )
@@ -34,16 +32,31 @@ func NewCommentDaoInstance() *CommentDao {
 	return commentDao
 }
 
-func (*CommentDao) MQueryCommentById(videoId int) []Comment {
+//根据视频id查找相应评论
+func (*CommentDao) MQueryCommentByVideoId(videoId int) []Comment {
 	var comments []Comment
-	err := db.Where("video_id = ?", videoId).Find(&comments).Error
-	fmt.Println("comments----------", comments)
+	err := db.Order("create_date desc").Where("video_id = ?", videoId).Find(&comments).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil
 	}
 	if err != nil {
-		util.Logger.Error("find comments error:" + err.Error())
 		return nil
 	}
 	return comments
+}
+
+//发布评论
+func (*CommentDao) CreateComment(comment *Comment) error {
+	if err := db.Create(comment).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+//删除评论
+func (*CommentDao) DeleteComment(comment *Comment) error {
+	if err := db.Where("id = ?", comment.Id).Delete(comment).Error; err != nil {
+		return err
+	}
+	return nil
 }

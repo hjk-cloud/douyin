@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/hjk-cloud/douyin/models"
 	"github.com/hjk-cloud/douyin/service"
@@ -32,7 +31,7 @@ func Feed(c *gin.Context) {
 
 	videos, err = service.VideoListWithToken(token, latestTime)
 
-	fmt.Println("controller ----------", videos)
+	//fmt.Println("controller ----------", videos)
 	if err == nil {
 		c.JSON(http.StatusOK, FeedResponse{
 			Response:  Response{StatusCode: 0},
