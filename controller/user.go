@@ -70,7 +70,7 @@ func UserInfo(c *gin.Context) {
 			User:     *user,
 		})
 	} else {
-		c.JSON(http.StatusOK, UserLoginResponse{
+		c.JSON(http.StatusOK, UserResponse{
 			Response: Response{StatusCode: 1, StatusMsg: err.Error()},
 		})
 	}

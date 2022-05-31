@@ -52,6 +52,10 @@ func (f *VideoListFlow) packData() error {
 	videoDao.MQueryVideo(&f.Videos)
 	for i := range f.Videos {
 		videoDao.BuildAuthor(f.Videos[i])
+
+		user, _ := UserInfo(f.Token, f.Videos[i].AuthorId)
+		f.Videos[i].Author = *user
+		//fmt.Println(f.Videos[i].Author)
 		f.Videos[i].Author.IsFollow = relationDao.QueryRelationState(f.UserId, f.Videos[i].AuthorId)
 		f.Videos[i].IsFavorite = favoriteDao.QueryFavoriteState(f.UserId, f.Videos[i].Id)
 		//fmt.Println("service--",f.UserId,"----",f.Videos[i].Id,"--isFavorite---", f.Videos[i].IsFavorite)

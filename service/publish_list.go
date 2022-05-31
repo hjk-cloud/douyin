@@ -2,7 +2,6 @@ package service
 
 import (
 	"github.com/hjk-cloud/douyin/models"
-	"github.com/hjk-cloud/douyin/util/jwt"
 )
 
 type PublishListFlow struct {
@@ -35,22 +34,17 @@ func (f *PublishListFlow) Do() ([]models.Video, error) {
 	return f.Videos, nil
 }
 
+//此处不能验证token
+//对于未登录的用户，想要查看视频作者信息时，不需要token即可查看
 func (f *PublishListFlow) checkParam() error {
-	//fmt.Println("service---Token----", f.Token)
-	//fmt.Println("service---AuthorId----", f.UserId)
-	_, err := jwt.JWTAuth(f.Token)
-	if err != nil {
-		return err
-	}
+
 	return nil
 }
 
 func (f *PublishListFlow) prepareData() error {
-	userId, err := jwt.JWTAuth(f.Token)
-	if err != nil {
-		return err
-	}
-	f.UserId = userId
+
+	//fmt.Println("service-token--userId----", userId)
+	//fmt.Println("service---AuthorId----", f.UserId)
 	return nil
 }
 

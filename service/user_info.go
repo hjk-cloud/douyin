@@ -3,7 +3,6 @@ package service
 import (
 	"errors"
 	"github.com/hjk-cloud/douyin/models"
-	"github.com/hjk-cloud/douyin/util/jwt"
 )
 
 type UserInfoFlow struct {
@@ -37,10 +36,16 @@ func (f *UserInfoFlow) Do() (*models.User, error) {
 	return f.User, nil
 }
 
+//此处不能验证token
+//对于未登录的用户，想要查看视频作者信息时，不需要token即可查看
 func (f *UserInfoFlow) checkParam() error {
 	if f.UserId == 0 {
 		return errors.New("id为空")
 	}
+	//_, err := jwt.JWTAuth(f.Token)
+	//if err != nil {
+	//	return err
+	//}
 	return nil
 }
 
@@ -50,24 +55,20 @@ func (f *UserInfoFlow) prepareData() error {
 	videoDao := models.NewVideoDaoInstance()
 	var totalFavorited = 0
 
-	userId, err := jwt.JWTAuth(f.Token)
-	if err != nil {
-		return err
-	}
 	//关注数
-	followCount, err := relationDao.QueryRelationCountByUserId(userId)
+	followCount, err := relationDao.QueryRelationCountByUserId(f.UserId)
 	if err != nil {
 		return err
 	}
 	f.FollowCount = followCount
 	//粉丝数
-	followerCount, err := relationDao.QueryRelationCountByToUserId(userId)
+	followerCount, err := relationDao.QueryRelationCountByToUserId(f.UserId)
 	if err != nil {
 		return err
 	}
 	f.FollowerCount = followerCount
 	//获赞数
-	videoIds := videoDao.QueryPublishVideoList(userId)
+	videoIds := videoDao.QueryPublishVideoList(f.UserId)
 	for i := range videoIds {
 		totalFavorited += favoriteDao.QueryVideoFavoriteCount(videoIds[i])
 	}

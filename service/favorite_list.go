@@ -2,7 +2,6 @@ package service
 
 import (
 	"github.com/hjk-cloud/douyin/models"
-	"github.com/hjk-cloud/douyin/util/jwt"
 )
 
 type FavoriteListFlow struct {
@@ -35,12 +34,11 @@ func (f *FavoriteListFlow) Do() ([]*models.Video, error) {
 	return f.Videos, nil
 }
 
+//此处不能验证token
+//对于未登录的用户，想要查看视频作者信息时，不需要token即可查看
 func (f *FavoriteListFlow) checkParam() error {
-	//fmt.Println("favoriteService---Token----", f.Token)
 	//fmt.Println("favoriteService---UserId----", f.UserId)
-	if _, err := jwt.JWTAuth(f.Token); err != nil {
-		return err
-	}
+
 	return nil
 }
 
