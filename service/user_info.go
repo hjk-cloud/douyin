@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"github.com/hjk-cloud/douyin/models"
 	"github.com/hjk-cloud/douyin/util/jwt"
 )
@@ -75,8 +74,6 @@ func (f *UserInfoFlow) prepareData() error {
 	f.TotalFavorited = totalFavorited
 	//喜欢数
 	f.FavoriteCount = favoriteDao.QueryUserFavoriteCount(f.UserId)
-	fmt.Println("total---", f.TotalFavorited)
-	fmt.Println("favoriteCount-------", f.FavoriteCount)
 	return nil
 }
 
