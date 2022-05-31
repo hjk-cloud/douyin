@@ -7,13 +7,15 @@ import (
 )
 
 type User struct {
-	Id            int    `gorm:"column:id;type:int" json:"id,omitempty"`
-	Name          string `gorm:"column:name;type:varchar(10);" json:"name,omitempty"`
-	Password      string `gorm:"column:password;type:varchar(10);" json:"password"`
-	FollowCount   int    `gorm:"column:follow_count;type:int" json:"follow_count,omitempty"`
-	FollowerCount int    `gorm:"column:follower_count;type:int" json:"follower_count,omitempty"`
-	Token         string `json:"token"`
-	IsFollow      bool   `json:"is_follow"`
+	Id             int    `gorm:"column:id;type:int" json:"id,omitempty"`
+	Name           string `gorm:"column:name;type:varchar(10);" json:"name,omitempty"`
+	Password       string `gorm:"column:password;type:varchar(10);" json:"password"`
+	FollowCount    int    `gorm:"column:follow_count;type:int" json:"follow_count,omitempty"`
+	FollowerCount  int    `gorm:"column:follower_count;type:int" json:"follower_count,omitempty"`
+	Token          string `json:"token"`
+	IsFollow       bool   `json:"is_follow"`
+	TotalFavorited int    `json:"total_favorited"`
+	FavoriteCount  int    `json:"favorite_count"`
 }
 
 func (User) TableName() string {

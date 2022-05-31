@@ -5,6 +5,7 @@ import (
 	"github.com/hjk-cloud/douyin/models"
 	"github.com/hjk-cloud/douyin/service"
 	"net/http"
+	"strconv"
 )
 
 type UserLoginResponse struct {
@@ -57,7 +58,8 @@ func Login(c *gin.Context) {
 }
 
 func UserInfo(c *gin.Context) {
-	userId := c.Query("user_id")
+	userIdString := c.Query("user_id")
+	userId, _ := strconv.Atoi(userIdString)
 	token := c.Query("token")
 
 	user, err := service.UserInfo(token, userId)

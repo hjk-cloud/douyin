@@ -89,3 +89,10 @@ func (*FavoriteDao) QueryVideoFavoriteCount(videoId int) int {
 	db.Table("favorite").Model(Favorite{}).Where("video_id = ?", videoId).Count(&count)
 	return int(count)
 }
+
+//根据用户id查询喜欢总数量
+func (*FavoriteDao) QueryUserFavoriteCount(userId int) int {
+	var count int64
+	db.Table("favorite").Model(Favorite{}).Where("user_id = ?", userId).Count(&count)
+	return int(count)
+}

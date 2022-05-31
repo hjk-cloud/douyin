@@ -53,24 +53,6 @@ func (*VideoDao) MQueryVideo(videos *[]*Video) error {
 	return nil
 }
 
-func (*VideoDao) MQueryVideoByToken(token string, videos []*Video) error {
-	//if err == gorm.ErrRecordNotFound {
-	//	return err
-	//}
-	//err = db.Where("author_id = ?", user.Id).Find(&videos).Error
-	//if err == gorm.ErrRecordNotFound {
-	//	return err
-	//}
-	//if err != nil {
-	//	util.Logger.Error("find videos by token error:" + err.Error())
-	//	return err
-	//}
-	//for i := range videos {
-	//	NewVideoDaoInstance().BuildAuthor(videos[i])
-	//}
-	return nil
-}
-
 func (*VideoDao) MQueryVideoByIds(videoIds []int) []*Video {
 	var videos []*Video
 	err := db.Where("id in ?", videoIds).Find(&videos).Error
