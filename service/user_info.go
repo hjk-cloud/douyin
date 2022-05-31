@@ -90,5 +90,7 @@ func (f *UserInfoFlow) packData() error {
 	f.User = user
 	f.User.FollowCount = f.FollowCount
 	f.User.FollowerCount = f.FollowerCount
+	f.User.TotalFavorited = f.TotalFavorited
+	f.User.FavoriteCount = f.FavoriteCount
 	return nil
 }
