@@ -1,9 +1,11 @@
 package models
 
 import (
+	"fmt"
 	"github.com/hjk-cloud/douyin/util"
 	"gorm.io/gorm"
 	"sync"
+	"time"
 )
 
 type Video struct {
@@ -42,12 +44,16 @@ func (*VideoDao) BuildAuthor(video *Video) error {
 	return nil
 }
 
-func (*VideoDao) MQueryVideo(videos *[]*Video) error {
-	err := db.Order("id desc").Limit(30).Find(&videos).Error
-	if err == gorm.ErrRecordNotFound {
-		return err
+func (*VideoDao) MQueryVideo(videos *[]*Video, lastTime time.Time, nextTime *int64) error {
+	result := db.Order("submit_time desc").Limit(2).Find(&videos, "submit_time < ?", lastTime)
+	err := result.Error
+	videoCnt := result.RowsAffected
+	if videoCnt == 0 {
+		*nextTime = lastTime.Unix() * 1000
+	} else {
+		*nextTime = NewVideoDaoInstance().MQueryVideoSubmitTimeById((*videos)[videoCnt-1].Id) * 1000
 	}
-	if err != nil {
+	if err == gorm.ErrRecordNotFound {
 		return err
 	}
 	return nil
@@ -66,6 +72,16 @@ func (*VideoDao) MQueryVideoByIds(videoIds []int) []*Video {
 		NewVideoDaoInstance().BuildAuthor(videos[i])
 	}
 	return videos
+}
+
+func (*VideoDao) MQueryVideoSubmitTimeById(id int) int64 {
+	var submitTime time.Time
+	err := db.Table("Video").Select("submit_time").Where("id = ?", id).Find(&submitTime).Error
+	if err != nil {
+		return -1
+	}
+	fmt.Println("video.go : submitTime &&  submitTime.UNix()", submitTime, submitTime.Unix())
+	return submitTime.Unix()
 }
 
 //王硕-------------------通过视频id查找并返回对应的所有视频
