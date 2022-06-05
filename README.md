@@ -19,9 +19,9 @@ https://bytedance.feishu.cn/docx/doxcnbgkMy2J0Y3E6ihqrvtHXPg
 ## video模块
 video封面url未获取
 
-前端请求参数中latest_time属性未使用
+前端请求参数中latest_time属性未使用(已解决)
 
-next_time属性未使用
+next_time属性未使用(已解决)
 
 ## comment模块
 没找到怎么删评论(已解决，长按评论，该功能已实现)
