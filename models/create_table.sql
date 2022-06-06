@@ -52,6 +52,7 @@ DROP TABLE IF EXISTS `favorite`;
 CREATE TABLE `favorite` (
   `user_id` int DEFAULT NULL,
   `video_id` int DEFAULT NULL,
+  `action_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   UNIQUE KEY `favorite_pk` (`user_id`,`video_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -62,7 +63,7 @@ CREATE TABLE `favorite` (
 
 LOCK TABLES `favorite` WRITE;
 /*!40000 ALTER TABLE `favorite` DISABLE KEYS */;
-INSERT INTO `favorite` VALUES (1,4),(2,2),(2,7),(3,1),(7,4),(12,4),(12,7);
+INSERT INTO `favorite` VALUES (1,4,'2022-03-16 08:30:00'),(2,2,'2022-03-17 08:30:00'),(2,7,'2022-03-18 08:30:00'),(3,1,'2022-03-19 08:30:00'),(7,4,'2022-03-20 08:30:00'),(12,4,'2022-03-21 08:30:00'),(12,7,'2022-03-22 08:30:00');
 /*!40000 ALTER TABLE `favorite` ENABLE KEYS */;
 UNLOCK TABLES;
 
