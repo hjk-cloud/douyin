@@ -13,8 +13,6 @@ type VideoListResponse struct {
 	VideoList []models.Video `json:"video_list"`
 }
 
-//todo
-
 // Publish check token then save upload file to public directory
 func Publish(c *gin.Context) {
 	token := c.PostForm("token")
