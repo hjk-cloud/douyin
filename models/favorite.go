@@ -4,11 +4,13 @@ import (
 	"github.com/hjk-cloud/douyin/util"
 	"gorm.io/gorm"
 	"sync"
+	"time"
 )
 
 type Favorite struct {
-	UserId  int `json:"user_id"`
-	VideoId int `json:"video_id"`
+	UserId     int       `json:"user_id"`
+	VideoId    int       `json:"video_id"`
+	ActionTime time.Time `json:"action_time"`
 }
 
 func (Favorite) tableName() string {
@@ -31,6 +33,7 @@ func NewFavoriteDaoInstance() *FavoriteDao {
 
 //点赞
 func (*FavoriteDao) CreateFavorite(favorite Favorite) error {
+	favorite.ActionTime = time.Now().UTC().Truncate(time.Second)
 	if err := db.Table("favorite").Create(&favorite).Error; err != nil {
 		return err
 	}
@@ -62,7 +65,7 @@ func (*FavoriteDao) QueryFavoriteCount(videoId int) (int, error) {
 //根据userId查找已点赞视频id列表
 func (*FavoriteDao) QueryFavoriteVideo(userId int) []int {
 	videoIds := make([]int, 0)
-	err := db.Table("favorite").Select("video_id").Where("user_id = ?", userId).Find(&videoIds).Error
+	err := db.Table("favorite").Select("video_id").Order("action_time desc").Where("user_id = ?", userId).Find(&videoIds).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil
 	}
