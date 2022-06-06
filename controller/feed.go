@@ -42,6 +42,7 @@ func Feed(c *gin.Context) {
 	var nextTime int64
 	videos, err, nextTime = service.VideoListWithToken(token, latestTime)
 
+	fmt.Println("feed.go : nextTime ", nextTime)
 	//fmt.Println("controller ----------", videos)
 	if err == nil {
 		c.JSON(http.StatusOK, FeedResponse{
