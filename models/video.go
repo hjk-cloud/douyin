@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/hjk-cloud/douyin/util"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"sync"
 	"time"
 )
@@ -61,7 +62,8 @@ func (*VideoDao) MQueryVideo(videos *[]*Video, lastTime time.Time, nextTime *int
 
 func (*VideoDao) MQueryVideoByIds(videoIds []int) []*Video {
 	var videos []*Video
-	err := db.Where("id in ?", videoIds).Find(&videos).Error
+	err := db.Where("id in ?", videoIds).Clauses(clause.OrderBy{
+		Expression: clause.Expr{SQL: "FIELD(id,?)", Vars: []interface{}{videoIds}, WithoutParentheses: true}}).Find(&videos).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil
 	}
