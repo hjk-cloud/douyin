@@ -6,7 +6,7 @@ var (
 	DBName     = "douyin" //数据库名
 
 	//video表中的play_url也需要改成自己的IP地址
-	URL = "http://192.168.136.188:8080" //URL前缀
+	URL = "http://192.168.255.188:8080" //URL前缀
 
 	//视频路径
 	StaticSourcePath = "D:\\My GoLand\\simple-demo\\public\\"
