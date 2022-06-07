@@ -2,6 +2,15 @@
 
 导入项目后，在/define/define.go中修改相应参数适配本地信息
 
+## ffmpeg安装
+
+用于截取发布视频的封面图
+
+下载地址 https://github.com/BtbN/FFmpeg-Builds/releases
+
+配置教程 https://blog.csdn.net/HYEHYEHYE/article/details/122000352
+
+
 # 功能说明
 
 抖音接口文档

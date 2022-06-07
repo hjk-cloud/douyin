@@ -5,9 +5,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/hjk-cloud/douyin/define"
 	"github.com/hjk-cloud/douyin/models"
+	"github.com/hjk-cloud/douyin/util"
 	"github.com/hjk-cloud/douyin/util/jwt"
 	"mime/multipart"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -62,9 +64,13 @@ func (f *PublishFlow) prepareData() error {
 	if err := f.c.SaveUploadedFile(f.Data, saveFile); err != nil {
 		return err
 	}
+	if _, err := util.GetSnapshot(define.StaticSourcePath+finalName, define.StaticSourcePath+"pic\\"+strings.Split(finalName, ".")[0], 1); err != nil {
+		return err
+	}
 	playUrl := define.URL + "/static/" + finalName
+	picUrl := define.URL + "/static/pic/" + strings.Split(finalName, ".")[0] + ".png"
 	f.PlayUrl = playUrl
-	f.CoverUrl = "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg"
+	f.CoverUrl = picUrl
 	f.SubmitTime = time.Now().Local()
 	return nil
 }
