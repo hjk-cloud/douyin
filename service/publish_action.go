@@ -8,17 +8,19 @@ import (
 	"github.com/hjk-cloud/douyin/util/jwt"
 	"mime/multipart"
 	"path/filepath"
+	"time"
 )
 
 type PublishFlow struct {
-	Token    string
-	Title    string
-	Data     *multipart.FileHeader
-	c        *gin.Context
-	Video    *models.Video
-	AuthorId int
-	PlayUrl  string
-	CoverUrl string
+	Token      string
+	Title      string
+	Data       *multipart.FileHeader
+	c          *gin.Context
+	Video      *models.Video
+	AuthorId   int
+	PlayUrl    string
+	CoverUrl   string
+	SubmitTime time.Time
 }
 
 func Publish(token string, title string, data *multipart.FileHeader, c *gin.Context) error {
@@ -63,17 +65,19 @@ func (f *PublishFlow) prepareData() error {
 	playUrl := define.URL + "/static/" + finalName
 	f.PlayUrl = playUrl
 	f.CoverUrl = playUrl
+	f.SubmitTime = time.Now().Local()
 	return nil
 }
 
 func (f *PublishFlow) packData() error {
 	f.Video = &models.Video{
-		AuthorId: f.AuthorId,
-		PlayUrl:  f.PlayUrl,
-		CoverUrl: f.CoverUrl,
-		Title:    f.Title,
+		AuthorId:   f.AuthorId,
+		PlayUrl:    f.PlayUrl,
+		CoverUrl:   f.CoverUrl,
+		Title:      f.Title,
+		SubmitTime: f.SubmitTime,
 	}
-	//fmt.Println("packData----Video", f.Video)
+	//fmt.Println("packData----time", f.SubmitTime)
 	videoDao := models.NewVideoDaoInstance()
 	if err := videoDao.PublishVideo(f.Video); err != nil {
 		return err

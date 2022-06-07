@@ -10,15 +10,16 @@ import (
 )
 
 type Video struct {
-	Id            int    `gorm:"column:id;type:int" json:"id,omitempty"`
-	AuthorId      int    `gorm:"column:author_id" json:"author_id,omitempty"`
-	Author        User   `json:"author"`
-	PlayUrl       string `gorm:"column:play_url;type:varchar(255)" json:"play_url"`
-	CoverUrl      string `gorm:"column:cover_url;type:varchar(255)" json:"cover_url"`
-	FavoriteCount int    `json:"favorite_count,omitempty"`
-	CommentCount  int    `json:"comment_count,omitempty"`
-	Title         string `json:"title,omitempty"`
-	IsFavorite    bool   `json:"is_favorite"`
+	Id            int       `gorm:"column:id;type:int" json:"id,omitempty"`
+	AuthorId      int       `gorm:"column:author_id" json:"author_id,omitempty"`
+	Author        User      `json:"author"`
+	PlayUrl       string    `gorm:"column:play_url;type:varchar(255)" json:"play_url"`
+	CoverUrl      string    `gorm:"column:cover_url;type:varchar(255)" json:"cover_url"`
+	FavoriteCount int       `json:"favorite_count,omitempty"`
+	CommentCount  int       `json:"comment_count,omitempty"`
+	Title         string    `json:"title,omitempty"`
+	IsFavorite    bool      `json:"is_favorite"`
+	SubmitTime    time.Time `gorm:"column:submit_time;type:datetime" json:"submit_time"`
 }
 
 func (Video) TableName() string {
@@ -46,7 +47,7 @@ func (*VideoDao) BuildAuthor(video *Video) error {
 }
 
 func (*VideoDao) MQueryVideo(videos *[]*Video, lastTime time.Time, nextTime *int64) error {
-	result := db.Order("submit_time desc").Limit(2).Find(&videos, "submit_time < ?", lastTime)
+	result := db.Order("submit_time desc").Limit(30).Find(&videos, "submit_time < ?", lastTime)
 	err := result.Error
 	videoCnt := result.RowsAffected
 	if videoCnt == 0 {
@@ -116,8 +117,7 @@ func (*VideoDao) QueryPublishVideoList(UserId int) []int {
 }
 
 func (*VideoDao) PublishVideo(video *Video) error {
-	err := db.Select("author_id", "play_url", "cover_url", "title", "created_at").
-		Create(&video).Error
+	err := db.Select("author_id", "play_url", "cover_url", "title", "submit_time").Create(&video).Error
 	if err != nil {
 		return err
 	}
