@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"github.com/hjk-cloud/douyin/util"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -83,14 +82,14 @@ func (*VideoDao) MQueryVideoSubmitTimeById(id int) int64 {
 	if err != nil {
 		return -1
 	}
-	fmt.Println("video.go : submitTime &&  submitTime.UNix()", submitTime, submitTime.Unix())
+	//fmt.Println("video.go : submitTime &&  submitTime.UNix()", submitTime, submitTime.Unix())
 	return submitTime.Unix()
 }
 
 //王硕-------------------通过视频id查找并返回对应的所有视频
 func (*VideoDao) MQueryVideoByAuthorIds(videoIds []int) []Video {
 	var videos []Video
-	err := db.Where("id in ?", videoIds).Find(&videos).Error
+	err := db.Where("id in ?", videoIds).Order("submit_time desc").Find(&videos).Error
 
 	if err == gorm.ErrRecordNotFound {
 		return nil
@@ -105,7 +104,8 @@ func (*VideoDao) MQueryVideoByAuthorIds(videoIds []int) []Video {
 //王硕------------------------通过用户id查找该id下发布的所有视频的id
 func (*VideoDao) QueryPublishVideoList(UserId int) []int {
 	ids := make([]int, 0)
-	err := db.Table("video").Select("id").Where("author_id = ?", UserId).Find(&ids).Error
+	err := db.Table("video").Select("id").Where("author_id = ?", UserId).Order("submit_time desc").Find(&ids).Error
+	//fmt.Println(ids)
 	if err == gorm.ErrRecordNotFound {
 		return nil
 	}

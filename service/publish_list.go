@@ -53,11 +53,11 @@ func (f *PublishListFlow) packData() error {
 	favoriteDao := models.NewFavoriteDaoInstance()
 
 	videos := videoDao.QueryPublishVideoList(f.UserId)
-	//fmt.Println("videoId-----------", videos)
 	f.Videos = videoDao.MQueryVideoByAuthorIds(videos)
 	for i := range f.Videos {
 		f.Videos[i].IsFavorite = favoriteDao.QueryFavoriteState(f.UserId, f.Videos[i].Id)
 		f.Videos[i].FavoriteCount = favoriteDao.QueryVideoFavoriteCount(f.Videos[i].Id)
 	}
+	//fmt.Println("video-----------", videos)
 	return nil
 }
