@@ -10,6 +10,15 @@
 
 配置教程 https://blog.csdn.net/HYEHYEHYE/article/details/122000352
 
+## redis安装
+
+用于和mysql一起建立二级缓存
+
+windows版本下载地址 https://github.com/tporadowski/redis/releases
+
+下载教程 https://blog.csdn.net/qq_26373925/article/details/109269459
+
+无需配置 只需要安装好即可使用！
 
 # 功能说明
 
