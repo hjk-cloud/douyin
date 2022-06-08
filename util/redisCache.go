@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/garyburd/redigo/redis"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/hjk-cloud/douyin/define"
 	"github.com/hjk-cloud/douyin/util/redisPool"
 	"strconv"
 )
@@ -13,7 +14,7 @@ import (
 type userInfo struct {
 	Id       int    `db:"id"`
 	Name     string `db:"name"`
-	Password int    `db:"password"`
+	Password string `db:"password"`
 }
 
 //func GetRedisCache() {
@@ -54,14 +55,14 @@ func GetAll() {
 			} else {
 				fmt.Printf("id = %d\n", u.Id)
 				fmt.Printf("name = %s\n", u.Name)
-				fmt.Printf("password = %d\n", u.Password)
+				fmt.Printf("password = %s\n", u.Password)
 			}
 		}
 	} else {
 		fmt.Println("从mysql中获取")
 
 		//查询数据库
-		db, _ := sql.Open("mysql", "root:541688@tcp(localhost:3306)/douyin")
+		db, _ := sql.Open("mysql", "root"+define.DBPassWord+"@tcp(localhost:3306)/douyin")
 		defer db.Close()
 
 		var userInfos []userInfo
@@ -70,7 +71,7 @@ func GetAll() {
 		for rows.Next() {
 			var id int
 			var name string
-			var password int
+			var password string
 			rows.Scan(&id, &name, &password)
 			per := userInfo{id, name, password}
 			userInfos = append(userInfos, per)
@@ -79,8 +80,8 @@ func GetAll() {
 		//写入到redis中:将userinfo以hash的方式写入到redis中
 		for _, v := range userInfos {
 
-			v_byte, _ := json.Marshal(v)
-			_, err1 := conn.Do("SETNX", v.Id, v_byte)
+			vByte, _ := json.Marshal(v)
+			_, err1 := conn.Do("SETNX", v.Id, vByte)
 			_, err2 := conn.Do("rpush", "mlist", v.Id) //rpush从右侧输入，lpush从左侧输入
 			// 设置过期时间
 			conn.Do("EXPIRE", v.Id, 60*5)
