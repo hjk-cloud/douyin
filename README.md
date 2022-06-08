@@ -18,7 +18,9 @@ windows版本下载地址 https://github.com/tporadowski/redis/releases
 
 下载教程 https://blog.csdn.net/qq_26373925/article/details/109269459
 
-无需配置 只需要安装好后打开对应文件夹，开启redis-server.exe和redis-cli.exe即可使用！
+无需配置 只需要安装好后打开对应文件夹，开启`redis-server.exe`和`redis-cli.exe`即可使用！
+
+测试的时候需要在`util/redisCache.go`中更改为自己的mysql密码
 
 # 功能说明
 
