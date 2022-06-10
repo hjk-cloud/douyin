@@ -39,7 +39,6 @@ func (f *FavoriteActionFlow) Do() error {
 }
 
 func (f *FavoriteActionFlow) checkParam() error {
-
 	return nil
 }
 

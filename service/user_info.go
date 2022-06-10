@@ -42,10 +42,6 @@ func (f *UserInfoFlow) checkParam() error {
 	if f.UserId == 0 {
 		return errors.New("id为空")
 	}
-	//_, err := jwt.JWTAuth(f.Token)
-	//if err != nil {
-	//	return err
-	//}
 	return nil
 }
 

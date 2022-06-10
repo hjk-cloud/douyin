@@ -1,9 +1,16 @@
 package service
 
 import (
+	"errors"
 	"github.com/hjk-cloud/douyin/models"
 	"github.com/hjk-cloud/douyin/util/jwt"
 	"time"
+)
+
+const (
+	MaxWordslength = 300
+	MinWordslength = 4
+	zero           = 0
 )
 
 type CommentActionFlow struct {
@@ -46,7 +53,28 @@ func (f *CommentActionFlow) Do() (*models.Comment, error) {
 }
 
 func (f *CommentActionFlow) checkParam() error {
-
+	// 这样写会导致无法删除评论！
+	//if f.CommentText == "" {
+	//	return errors.New("评论为空")
+	//}
+	// 必须加上大于0，否则无法删除评论，但是无法限制空字符输入!
+	if len(f.CommentText) < MinWordslength && len(f.CommentText) > zero {
+		return errors.New("就这点输出？你不行啊")
+	}
+	if len(f.CommentText) > MaxWordslength {
+		return errors.New("评论内容量过多，喝杯茶再继续吧")
+	}
+	for i := 0; i < len(f.CommentText)/3; i++ {
+		judgeWords := []rune(f.CommentText)
+		if string(judgeWords[i:i+2]) == "傻逼" || string(judgeWords[i:i+2]) == "脑残" ||
+			string(judgeWords[i:i+2]) == "智障" || string(judgeWords[i:i+2]) == "死妈" {
+			return errors.New("阿弥陀佛，施主，您的用词不当")
+		}
+		if string(judgeWords[i:i+2]) == "偷窃" || string(judgeWords[i:i+2]) == "卖淫" ||
+			string(judgeWords[i:i+2]) == "吸毒" || string(judgeWords[i:i+2]) == "赌博" {
+			return errors.New("阿弥陀佛，施主，我看刑")
+		}
+	}
 	return nil
 }
 

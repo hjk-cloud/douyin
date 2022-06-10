@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/hjk-cloud/douyin/define"
@@ -47,7 +48,23 @@ func (f *PublishFlow) Do() error {
 }
 
 func (f *PublishFlow) checkParam() error {
-
+	if len(f.Title) > 165 {
+		return errors.New("你想用标题长度来吸引我吗？")
+	}
+	if f.Title == "" {
+		return errors.New("小编写标题的精髓被你掌握了")
+	}
+	for i := 0; i < len(f.Title)/3; i++ {
+		judgeWords := []rune(f.Title)
+		if string(judgeWords[i:i+2]) == "傻逼" || string(judgeWords[i:i+2]) == "脑残" ||
+			string(judgeWords[i:i+2]) == "智障" || string(judgeWords[i:i+2]) == "死妈" {
+			return errors.New("阿弥陀佛，施主，您的用词不当")
+		}
+		if string(judgeWords[i:i+2]) == "偷窃" || string(judgeWords[i:i+2]) == "卖淫" ||
+			string(judgeWords[i:i+2]) == "吸毒" || string(judgeWords[i:i+2]) == "赌博" {
+			return errors.New("阿弥陀佛，施主，我看刑")
+		}
+	}
 	return nil
 }
 
