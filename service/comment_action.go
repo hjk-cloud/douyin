@@ -66,8 +66,8 @@ func (f *CommentActionFlow) checkParam() error {
 	}
 	for i := 0; i < len(f.CommentText)/3; i++ {
 		judgeWords := []rune(f.CommentText)
-		if string(judgeWords[i:i+2]) == "傻逼" || string(judgeWords[i:i+2]) == "脑残" ||
-			string(judgeWords[i:i+2]) == "智障" || string(judgeWords[i:i+2]) == "死妈" {
+		if string(judgeWords[i:i+2]) == "傻瓜" || string(judgeWords[i:i+2]) == "笨蛋" ||
+			string(judgeWords[i:i+2]) == "智障" || string(judgeWords[i:i+2]) == "丧母" {
 			return errors.New("阿弥陀佛，施主，您的用词不当")
 		}
 		if string(judgeWords[i:i+2]) == "偷窃" || string(judgeWords[i:i+2]) == "卖淫" ||
