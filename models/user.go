@@ -76,10 +76,7 @@ func (*UserDao) MQueryUserById(ids []int) []User {
 //注册时根据用户名判重
 func (*UserDao) QueryUserByName(name string) (int, error) {
 	var count int64
-	err := db.Where("name = ?", name).Count(&count).Error
-	if err == gorm.ErrRecordNotFound {
-		return 1, nil
-	}
+	db.Model(&User{}).Where("name = ?", name).Count(&count)
 	return int(count), nil
 }
 

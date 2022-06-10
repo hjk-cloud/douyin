@@ -54,7 +54,7 @@ func (f *UserRegisterFlow) checkParam() error {
 func (f *UserRegisterFlow) Register() error {
 	userDao := models.NewUserDaoInstance()
 
-	if count, err := userDao.QueryUserByName(f.Username); err != nil && count > 0 {
+	if count, err := userDao.QueryUserByName(f.Username); err == nil && count > 0 {
 		return errors.New("用户名已存在")
 	}
 	user := &models.User{
