@@ -74,9 +74,9 @@ func (f *CommentActionFlow) checkParam() error {
 			string(judgeWords[i:i+2]) == "吸毒" || string(judgeWords[i:i+2]) == "赌博" {
 			return errors.New("客官，您的用词我看刑")
 		}
-		if string(judgeWords[i:i+2]) == "阿弥陀佛" || string(judgeWords[i:i+2]) == "算命" ||
+		if string(judgeWords[i:i+2]) == "阿弥陀佛" || string(judgeWords[i:i+2]) == "算卦" ||
 			string(judgeWords[i:i+2]) == "护身" || string(judgeWords[i:i+2]) == "助吉避凶" {
-			return errors.New("客官，禁止封建迷信哦！")
+			return errors.New("客官， 禁止封建迷信哦！")
 		}
 	}
 	return nil
