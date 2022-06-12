@@ -33,9 +33,15 @@ func NewFavoriteDaoInstance() *FavoriteDao {
 
 //点赞
 func (*FavoriteDao) CreateFavorite(favorite Favorite) error {
-	favorite.ActionTime = time.Now().UTC().Truncate(time.Second)
-	if err := db.Table("favorite").Create(&favorite).Error; err != nil {
-		return err
+	var c chan time.Time
+	c = make(chan time.Time, 10)
+	c <- time.Now().UTC().Truncate(time.Second)
+	for len(c) != 0 {
+		//fmt.Println("len c = ", len(c))
+		favorite.ActionTime = <-c
+		if err := db.Table("favorite").Create(&favorite).Error; err != nil {
+			return err
+		}
 	}
 	return nil
 }
