@@ -9,8 +9,6 @@ import (
 
 const (
 	MaxWordslength = 300
-	MinWordslength = 4
-	zero           = 0
 )
 
 type CommentActionFlow struct {
@@ -53,13 +51,11 @@ func (f *CommentActionFlow) Do() (*models.Comment, error) {
 }
 
 func (f *CommentActionFlow) checkParam() error {
-	// 这样写会导致无法删除评论！
-	//if f.CommentText == "" {
-	//	return errors.New("评论为空")
-	//}
-	// 必须加上大于0，否则无法删除评论，但是无法限制空字符输入!
-	if len(f.CommentText) < MinWordslength && len(f.CommentText) > zero {
-		return errors.New("就这点输出？你不行啊")
+	if f.ActionType == "2" {
+		return nil
+	}
+	if f.CommentText == "" {
+		return errors.New("评论为空")
 	}
 	if len(f.CommentText) > MaxWordslength {
 		return errors.New("评论内容量过多，喝杯茶再继续吧")
@@ -68,15 +64,11 @@ func (f *CommentActionFlow) checkParam() error {
 		judgeWords := []rune(f.CommentText)
 		if string(judgeWords[i:i+2]) == "傻瓜" || string(judgeWords[i:i+2]) == "笨蛋" ||
 			string(judgeWords[i:i+2]) == "智障" || string(judgeWords[i:i+2]) == "丧母" {
-			return errors.New("客官，您的用词不当")
+			return errors.New("阿弥陀佛，施主，您的用词不当")
 		}
 		if string(judgeWords[i:i+2]) == "偷窃" || string(judgeWords[i:i+2]) == "卖淫" ||
 			string(judgeWords[i:i+2]) == "吸毒" || string(judgeWords[i:i+2]) == "赌博" {
-			return errors.New("客官，您的用词我看刑")
-		}
-		if string(judgeWords[i:i+2]) == "阿弥陀佛" || string(judgeWords[i:i+2]) == "算卦" ||
-			string(judgeWords[i:i+2]) == "护身" || string(judgeWords[i:i+2]) == "助吉避凶" {
-			return errors.New("客官， 禁止封建迷信哦！")
+			return errors.New("阿弥陀佛，施主，我看刑")
 		}
 	}
 	return nil
