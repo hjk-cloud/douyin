@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	_ "github.com/hjk-cloud/douyin/cache"
 	"github.com/hjk-cloud/douyin/models"
 	"github.com/hjk-cloud/douyin/routers"
-	"github.com/hjk-cloud/douyin/util"
 )
 
 func main() {
@@ -14,8 +14,8 @@ func main() {
 
 	routers.InitRouter(r)
 
-	//用来测试redis连接
-	util.GetAll()
+	////用来测试redis连接
+	//cache.GetAll()
 
 	r.Run()
 }

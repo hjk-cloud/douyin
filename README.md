@@ -12,7 +12,7 @@
 
 ## redis安装
 
-用于和mysql一起建立二级缓存
+用于和mysql一起建立二级缓存(未完成)
 
 windows版本下载地址 https://github.com/tporadowski/redis/releases
 
